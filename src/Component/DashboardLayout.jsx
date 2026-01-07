@@ -9,7 +9,7 @@ function DashboardLayout({ children }) {
 
         <NavLink to="/dashboard"   className={({ isActive }) =>
             ` ${
-              isActive ? " text-cyan-400" : "hover:text-cyan-400"
+              isActive ? " text-orange-700" : "hover:text-orange-700"
             }`
           }>
           Dashboard
@@ -24,21 +24,21 @@ function DashboardLayout({ children }) {
         </NavLink> */} 
         <NavLink to="/Doctors"   className={({ isActive }) =>
             ` ${
-              isActive ? " text-cyan-400" : "hover:text-cyan-400"
+              isActive ? " text-orange-700" : "hover:text-orange-700"
             }`
           }>
           Doctors
         </NavLink>
         <NavLink to="/Nurses"   className={({ isActive }) =>
             ` ${
-              isActive ? " text-cyan-400" : "hover:text-cyan-400"
+              isActive ? " text-orange-700" : "hover:text-orange-700"
             }`
           }>
           Nurses
         </NavLink>
         <NavLink to="/Patients"   className={({ isActive }) =>
             ` ${
-              isActive ? " text-cyan-400" : "hover:text-cyan-400"
+              isActive ? " text-orange-700" : "hover:text-orange-700"
             }`
           }>
           Patients

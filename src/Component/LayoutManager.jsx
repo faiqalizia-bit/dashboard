@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md"
 
@@ -10,6 +10,16 @@ const LayoutManager = ({ title }) => {
   const [editId, setEditId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
+  useEffect(() => {
+  const storedItems = localStorage.getItem("layoutItems");
+  if (storedItems) {
+    setItems(JSON.parse(storedItems));
+  }
+}, []);
+
+  useEffect(() => {
+    localStorage.setItem("layoutItems", JSON.stringify(items));
+  }, [items]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,7 +77,7 @@ const LayoutManager = ({ title }) => {
 
         <button
           onClick={() => setShowPopup(true)}
-          className="bg-cyan-500 text-white px-8 rounded"
+          className="bg-black text-orange-700 px-8 rounded"
         >
           Add
         </button>
@@ -101,13 +111,13 @@ const LayoutManager = ({ title }) => {
                   <td className="border p-2 space-x-2">
                     <button
                       onClick={() => handleEdit(item)}
-                      className="bg-cyan-400 px-3 py-1 rounded text-balck"
+                      className="bg-orange-700 px-3 py-1 rounded text-black"
                     >
                       <MdOutlineModeEditOutline />
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="bg-cyan-400 px-3 py-1 rounded text-balck"
+                      className="bg-orange-700 px-3 py-1 rounded text-black"
                     >
                      <AiTwotoneDelete />
                     </button>
@@ -126,13 +136,13 @@ const LayoutManager = ({ title }) => {
       
        <div className="flex justify-between items-center mb-4">
       <h2 className="font-bold text-black">
-        {editId ? "Edit User" : "Add User"}
+        {editId ? "Edit " : "Add"}
       </h2>
       <button
         onClick={closePopup} 
-        className="text-cyan-400 font-bold text-lg hover:text-red-500"
+        className="text-orange-700 font-bold text-lg hover:text-red-500"
       >
-        ×
+        x
       </button>
     </div>
 
@@ -159,12 +169,12 @@ const LayoutManager = ({ title }) => {
                 <button
                   type="button"
                   onClick={closePopup}
-                  className="px-3 py-1  rounded bg-cyan-500 text-white"
+                  className="px-3 py-1  rounded bg-white text-orange-700"
                 >
                   Cancel
                 </button>
 
-                <button className="bg-cyan-500 text-white px-4 py-1 rounded">
+                <button className="bg-white text-orange-700 px-4 py-1 rounded">
                   {editId ? "Save" : "Add"}
                 </button>
               </div>
