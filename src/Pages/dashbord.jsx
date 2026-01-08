@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import DashboardLayout from '../Component/DashboardLayout';
+import { RxDashboard } from "react-icons/rx"
 
 function Dashbord() {
     const [users, setUsers] = useState([]);
@@ -13,9 +14,9 @@ function Dashbord() {
     const totalUsers = users.length;
     return (
         <DashboardLayout>
-            <div className='flex'>
-                <div className='bg-gray-100 w-full'>
-                    <h1 className="text-2xl font-bold">Dashboard</h1>
+            <div className='flex py-2'>
+                <div className='bg-neutral w-full'>
+                    <h1 className="text-sm font-bold"><div className='flex gap-[4px] items-center'>Dashboard</div></h1>
 
                     <div className="grid grid-cols-3 gap-5 w-full p-5">
                         <div className="w-full bg-white p-5 rounded shadow">

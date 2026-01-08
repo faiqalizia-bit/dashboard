@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md"
 
-const LayoutManager = ({ title }) => {
+const LayoutManager = ({ title, storageKey }) => {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
   const [name, setName] = useState("");
@@ -10,16 +10,21 @@ const LayoutManager = ({ title }) => {
   const [editId, setEditId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  useEffect(() => {
-  const storedItems = localStorage.getItem("layoutItems");
-  if (storedItems) {
-    setItems(JSON.parse(storedItems));
-  }
-}, []);
+ useEffect(() => {
+    const storedData = localStorage.getItem(storageKey);
+    if (storedData) {
+      setItems(JSON.parse(storedData));
+    }
+  }, [storageKey]);
+
 
   useEffect(() => {
-    localStorage.setItem("layoutItems", JSON.stringify(items));
-  }, [items]);
+    localStorage.setItem(storageKey, JSON.stringify(items));
+  }, [items, storageKey]);
+  
+// const storedData= JSON.parse(localStorage.getItem("storageKey"));
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -111,13 +116,13 @@ const LayoutManager = ({ title }) => {
                   <td className="border p-2 space-x-2">
                     <button
                       onClick={() => handleEdit(item)}
-                      className="bg-orange-700 px-3 py-1 rounded text-black"
+                      className="bg- px-3 py-1 rounded text-black"
                     >
                       <MdOutlineModeEditOutline />
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="bg-orange-700 px-3 py-1 rounded text-black"
+                      className="bg-primary px-3 py-1 rounded text-black"
                     >
                      <AiTwotoneDelete />
                     </button>
