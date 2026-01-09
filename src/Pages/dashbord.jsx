@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import DashboardLayout from '../Component/DashboardLayout';
-import { RxDashboard } from "react-icons/rx"
+
 
 function Dashbord() {
     const [users, setUsers] = useState([]);
@@ -25,7 +25,7 @@ function Dashbord() {
                         </div>
 
                         <div className="w-full bg-white p-5 rounded shadow">
-                            <h3 className="text-gray-500 text-sm">Total Cars</h3>
+                            <h3 className="text-gray-500 text-sm">Total Hospitals</h3>
                             <p className="text-3xl font-bold">12</p>
                         </div>
 
@@ -33,6 +33,43 @@ function Dashbord() {
                             <h3 className="text-gray-500 text-sm">Active Users</h3>
                             <p className="text-3xl font-bold">
                                 {totalUsers > 0 ? totalUsers - 1 : 0}
+                            </p>
+                        </div>
+
+                        <div className="w-full bg-white p-5 rounded shadow">
+                            <h3 className="text-gray-500 text-sm">Doctors</h3>
+                            <p className="text-3xl font-bold">
+                                Recent:
+                            </p>
+                        </div>
+
+                        <div className="w-full bg-white p-5 rounded shadow">
+                            <h3 className="text-gray-500 text-sm">Nurses</h3>
+                            <p className="text-3xl font-bold">
+                               Recent: 
+                            </p>
+                        </div>
+
+                        <div className="w-full bg-white p-5 rounded shadow">
+                            <h3 className="text-gray-500 text-sm">Patients</h3>
+                            <p className="text-3xl font-bold">
+                                 Recent:
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className='flex gap-5 w-full p-5'>
+                        <div className="w-full bg-white p-5 rounded shadow">
+                            <h3 className="text-gray-500 text-sm">Patients</h3>
+                            <p className="text-3xl font-bold">
+                                 Recent:
+                            </p>
+                        </div>
+
+                        <div className="w-full bg-white p-5 rounded shadow">
+                            <h3 className="text-gray-500 text-sm">Patients</h3>
+                            <p className="text-3xl font-bold">
+                                 Recent:
                             </p>
                         </div>
                     </div>

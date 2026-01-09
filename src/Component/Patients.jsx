@@ -9,18 +9,19 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 
 function Patients() {
   const [search, setSearch] = useState("")
-const [name, setName] = useState("");
-const [email, setEmail] = useState("");
-const [editId, setEditId] = useState(null);
-const [showPopup, setShowPopup] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [editId, setEditId] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [deleted, setDelete] = useState(false)
 
-const [patients, setPatients] = useState(() => {
-  try {
-    return JSON.parse(localStorage.getItem("patients")) || [];
-  } catch {
-    return [];
-  }
-})
+  const [patients, setPatients] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("patients")) || [];
+    } catch {
+      return [];
+    }
+  })
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,19 +30,19 @@ const [patients, setPatients] = useState(() => {
       name,
       email,
     };
-      if (editId) {
+    if (editId) {
       setPatients((prev) =>
         prev.map((p) =>
           p.id === editId ? { ...p, name, email } : p
         )
       );
     } else {
-    setPatients((prev) => [...prev, newPatients]);
-  }
-  closePopup();
-};
+      setPatients((prev) => [...prev, newPatients]);
+    }
+    closePopup();
+  };
 
- const closePopup = () => {
+  const closePopup = () => {
     setShowPopup(false);
     setEditId(null);
     setName("");
@@ -56,7 +57,7 @@ const [patients, setPatients] = useState(() => {
     }
   }, [patients]);
 
-   const editPatients = (patient) => {
+  const editPatients = (patient) => {
     setEditId(patient.id);
     setName(patient.name);
     setEmail(patient.email);
@@ -64,20 +65,31 @@ const [patients, setPatients] = useState(() => {
   };
 
   const delPatients = (id) => {
-  setPatients((prevPatients) =>
-    prevPatients.filter((patient) => patient.id !== id)
-  );
-};
-
-const filteredpatients = patients.filter(
-      (nun) =>
-        nun.name.toLowerCase().includes(search.toLowerCase()) ||
-        nun.email.toLowerCase().includes(search.toLowerCase())
+    setPatients((prevPatients) =>
+      prevPatients.filter((patient) => patient.id !== id)
     );
+  };
+
+  const confirmDeletePatient = (id) => {
+    setDelete(id);
+  };
+
+  const handleDelete = () => {
+    setNurses((prev) => prev.filter((n) => n.id !== deleted));
+    setDelete(null);
+  };
+
+  const cancelDelete = () => setDelete(null);
+
+  const filteredpatients = patients.filter(
+    (nun) =>
+      nun.name.toLowerCase().includes(search.toLowerCase()) ||
+      nun.email.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <DashboardLayout>
       <div className="mb-10 relative py-2">
-        <h1 className="text-sm font-bold mb-4"> <div className="flex gap-[1px] items-center">Dashbord<span className="mt-[2px]"><MdKeyboardArrowRight/></span>Patients</div></h1>
+        <h1 className="text-sm font-bold mb-4"> <div className="flex gap-[1px] items-center">Dashbord<span className="mt-[2px]"><MdKeyboardArrowRight /></span>Patients</div></h1>
 
         <div className="flex gap-3 mb-5">
           <input
@@ -98,7 +110,7 @@ const filteredpatients = patients.filter(
 
 
         <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="w-full border-collapse">
+          <table className="w-full text-left border-collapse">
             <thead className="bg-gray-100">
               <tr>
                 <th className="border p-2">#</th>
@@ -117,8 +129,7 @@ const filteredpatients = patients.filter(
                 </tr>
               ) : (
                 filteredpatients.map((item, index) => (
-                  <tr key={item.id} className="text-center bg-neutral">
-                    <td className="border p-2">{index + 1}</td>
+                  <tr key={item.id} className="text-left bg-neutral">
                     <td className="border p-2">{item.name}</td>
                     <td className="border p-2">{item.email}</td>
                     <td className="border p-2 space-x-2">
@@ -129,7 +140,7 @@ const filteredpatients = patients.filter(
                         <MdOutlineModeEditOutline />
                       </button>
                       <button
-                        onClick={() => delPatients(item.id)}
+                        onClick={() => confirmDeletePatient(item.id)}
                         className=" px-3 py-1 rounded text-secondary"
                       >
                         <AiTwotoneDelete />
@@ -192,6 +203,38 @@ const filteredpatients = patients.filter(
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+        {deleted && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-5 rounded shadow w-[300px] text-center relative">
+
+              <button
+                onClick={cancelDelete}
+                className="absolute top-2 right-2 text-gray-500 hover:text-red-600 font-bold text-lg">x</button>
+
+              <h2 className="text-lg font-bold mb-4 ">Confirm Delete</h2>
+              <p className="mb-5">Are you sure you want to delete this nurse?</p>
+
+              <div className="flex justify-center gap-2 mt-3">
+                <button
+                  type="button"
+                  onClick={cancelDelete}
+                  className="px-3 py-1  rounded bg-gray-400 text-neutral"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="px-3 py-1  rounded bg-primary text-neutral"
+                >
+                  Delete
+                </button>
+
+              </div>
             </div>
           </div>
         )}

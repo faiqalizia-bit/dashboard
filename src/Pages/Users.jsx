@@ -169,6 +169,33 @@ export default LayoutManager;
 
 
 
+ {/* <div className="bg-[#f3f4f6] w-[17%] p-5  flex flex-col gap-5">
+        <h1 className="font-bold text-lg py-0"><div className="flex gap-[4px] items-center"><FaHospital/>Care Health</div></h1>
+        {routes.map((item, idx) => (
+
+          <NavLink to={item.path} className={({ isActive }) =>
+            ` ${isActive ? "bg-primary text-white rounded-md p-3" : "hover:text-orange-700"
+            }`
+          } key={idx}>
+            <div className="flex gap-[4px] items-center pl-[8px]">
+              {item.icon} {item.title}
+            </div>
+
+          </NavLink>
+        ))}
+       <button
+          onClick={''}
+          className="mt-auto flex items-center gap-2 p-3 hover:text-orange-700 rounded-md"
+        >
+          <FiLogOut />
+          Logout
+        </button>
+      
+      </div> */}
+      // ---------------
+
+
+
 
 // import { useEffect, useState } from "react";
 // import DashboardLayout from "../Component/DashboardLayout";

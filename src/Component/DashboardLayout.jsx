@@ -1,9 +1,14 @@
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, Link } from "react-router-dom";
 import { FaUserDoctor } from "react-icons/fa6"
 import { TbNurse } from "react-icons/tb"
 import { LuPill } from "react-icons/lu";
 import { RxDashboard } from "react-icons/rx"
 import { FaHospital } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { FaUserCircle } from "react-icons/fa";
+
 
 function DashboardLayout({ children }) {
 
@@ -15,46 +20,105 @@ function DashboardLayout({ children }) {
     },
     {
       title: "Doctors",
-      icon:<FaUserDoctor />,
-      path:"/doctors"
+      icon: <FaUserDoctor />,
+      path: "/doctors"
     },
     {
       title: "Nurses",
-      icon:<TbNurse />,
-      path:"/nurses"
+      icon: <TbNurse />,
+      path: "/nurses"
     },
     {
       title: "Patients",
       icon: <LuPill />,
-      path:"/patients"
-    }
+      path: "/patients"
+    },
 
   ]
+  const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [user, setUser] = useState("")
+ useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, [])
+
 
   return (
     <div className="flex h-screen">
 
-      <div className="bg-[#f3f4f6] w-[17%] p-5  flex flex-col gap-5">
-        <h1 className="font-bold text-lg py-0"><div className="flex gap-[4px] items-center"><FaHospital/>Care Health</div></h1>
-        {routes.map((item, idx) => (
+      <div
+        className={`bg-[#f3f4f6] flex flex-col transition-all duration-300
+        ${collapsed ? "w-[70px]" : "w-[17%]"} p-4`}
+      >
 
-          <NavLink to={item.path} className={({ isActive }) =>
-            ` ${isActive ? "bg-primary text-white rounded-md p-3" : "hover:text-orange-700"
-            }`
-          } key={idx}>
-            <div className="flex gap-[4px] items-center pl-[8px]">
-              {item.icon} {item.title}
-            </div>
 
-          </NavLink>
-        ))}
+        <div className="flex items-center justify-between mb-4">
+          {!collapsed && (
+            <h1 className="font-bold text-lg flex items-center gap-2">
+              <FaHospital />
+              Care Health
+            </h1>
+          )}
 
-      
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="text-xl m-auto"
+          >
+            {collapsed ? <IoChevronForward /> : <IoChevronBack />}
+          </button>
+        </div>
+
+        {/* Routes */}
+        <div className="flex flex-col gap-2">
+          {routes.map((item, idx) => (
+            <NavLink
+              key={idx}
+              to={item.path}
+              className={({ isActive }) =>
+                `flex items-center gap-3 p-3 rounded-md transition-all
+                ${isActive
+                  ? "bg-primary text-white"
+                  : "hover:text-orange-700"}`
+              }
+            >
+              <span className="text-lg">{item.icon}</span>
+              {!collapsed && <span>{item.title}</span>}
+            </NavLink>
+          ))}
+        </div>
+
+        <Link to="/" className="mt-auto flex items-center gap-3 p-3 hover:text-orange-700 rounded-md">
+            <FiLogOut />
+          {!collapsed && "Logout"}
+        </Link>
+
       </div>
 
-      <div className=" w-full p-5 overflow-auto">
-        <div className="border-b-2 border-e-black h-[30px]">
+      <div className=" w-full p-5 overflow-auto relative">
+        <div className="border-b-2 border-e-black h-[30px] relative">
+        
+         <div className="fixed top-4 right-6 z-50 ">
+          <FaUserCircle
+            size={25}
+            className="cursor-pointer text-gray-700 hover:text-primary"
+            onClick={() => setOpen(!open)}
+          />
+         {open && ( <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border ">
+              <ul className="text-sm">
+                <li className="px-4 py-2 hover:text-primary">
+                {user.name}
+                </li>
+                <li className="px-4 py-2 hover:text-primary">
+                  {user.email}
+                </li>
+              </ul>
+            </div>
+            )}
 
+          </div>
 
         </div>
         {/* <Outlet /> */}
@@ -70,7 +134,7 @@ export default DashboardLayout;
 
 
 
-  {/* <NavLink to="/Doctors" className={({ isActive }) =>
+{/* <NavLink to="/Doctors" className={({ isActive }) =>
           ` ${isActive ? "bg-primary text-nuteral rounded-sm p-[4px]" : "hover:text-orange-700"
           }`
         }>
@@ -92,7 +156,7 @@ export default DashboardLayout;
             <LuPill />Patients</div>
         </NavLink> */}
 
-        {/* <NavLink to="/Hospital"   className={({ isActive }) =>
+{/* <NavLink to="/Hospital"   className={({ isActive }) =>
             ` ${
               isActive ? " text-cyan-400" : "hover:text-cyan-400"
             }`

@@ -10,6 +10,7 @@ function Doctors() {
   const [email, setEmail] = useState("");
   const [editId, setEditId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [deleted,setDeleted]= useState(false)
   
   const [doctors, setDoctors] = useState(() => {
     try {
@@ -71,7 +72,16 @@ function Doctors() {
         doc.name.toLowerCase().includes(search.toLowerCase()) ||
         doc.email.toLowerCase().includes(search.toLowerCase())
   );
+   const confirmDeleteDoctor = (id) => {
+    setDeleted(id); 
+  };
 
+  const handleDelete = () => {
+    setDoctors((prev) => prev.filter((n) => n.id !== deleted));
+    setDeleted(null); 
+  };
+
+  const cancelDelete = () => setDeleted(null);
 
 
 
@@ -99,10 +109,9 @@ function Doctors() {
 
 
         <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="w-full border-collapse">
+          <table className="w-full text-left border-collapse">
             <thead className="bg-gray-100">
               <tr>
-                <th className="border p-2">#</th>
                 <th className="border p-2">Name</th>
                 <th className="border p-2">Email</th>
                 <th className="border p-2">Actions</th>
@@ -112,14 +121,13 @@ function Doctors() {
             <tbody>
               {filteredDoctors.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="text-center p-4">
+                  <td colSpan="3" className="text-center p-4">
                     No data found
                   </td>
                 </tr>
               ) : (
                 filteredDoctors.map((item, index) => (
-                  <tr key={item.id} className="text-center bg-neutral">
-                    <td className="border p-2">{index+1}</td>
+                  <tr key={item.id} className="text-left bg-neutral">
                     <td className="border p-2">{item.name}</td>
                     <td className="border p-2">{item.email}</td>
                     <td className="border p-2 space-x-2">
@@ -130,7 +138,7 @@ function Doctors() {
                         <MdOutlineModeEditOutline />
                       </button>
                       <button
-                        onClick={() => delDr(item.id)}
+                        onClick={() =>  confirmDeleteDoctor(item.id)}
                         className=" px-3 py-1 rounded text-black"
                       >
                         <AiTwotoneDelete />
@@ -195,6 +203,38 @@ function Doctors() {
               </form>
             </div>
           </div>
+        )}
+        {deleted&&(
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-5 rounded shadow w-[300px] text-center relative">
+            
+              <button 
+              onClick={cancelDelete}
+              className="absolute top-2 right-2 text-gray-500 hover:text-red-600 font-bold text-lg">x</button> 
+            
+             <h2 className="text-lg font-bold mb-4 ">Confirm Delete</h2>
+             <p className="mb-5">Are you sure you want to delete this nurse?</p>
+
+            <div className="flex justify-center gap-2 mt-3">
+              <button
+                type="button"
+                onClick={cancelDelete}
+                className="px-3 py-1  rounded bg-gray-400 text-neutral"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="px-3 py-1  rounded bg-primary text-neutral"
+              >
+                Delete
+              </button>
+
+            </div>
+          </div>
+        </div>
         )}
       </div>
     </DashboardLayout>

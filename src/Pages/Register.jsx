@@ -32,11 +32,34 @@ function Register() {
       return;
     }
 
-    localStorage.setItem("authUser", JSON.stringify(form));
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+
+    const userExists = users.some((u) => u.email === email);
+    if (userExists) {
+      setType("error");
+      setMessage("Email already registered");
+      return;
+    }
+
+    const newUser = {
+      id: Date.now(),
+      name,
+      email,
+      password, 
+    };
+
+    localStorage.setItem("users", JSON.stringify([...users, newUser]));
     setType("success");
     setMessage("Registration successful");
-    navigate("/dashboard");
-  };
+    navigate("/dashboard")
+  }
+
+  //   localStorage.setItem("authUser", JSON.stringify(form));
+  //   setType("success");
+  //   setMessage("Registration successful");
+  //   navigate("/dashboard");
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
