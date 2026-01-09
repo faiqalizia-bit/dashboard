@@ -13,7 +13,7 @@ function Login() {
     e.preventDefault();
 
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+       const users = JSON.parse(localStorage.getItem("users")) || [];
     const foundUser = users.find(
       (user) => user.email === email && user.password === password
     );
@@ -51,10 +51,11 @@ function Login() {
 
         {message && (
           <p
-            className={`mb-4 text-sm p-2 rounded ${type === "error"
+            className={`mb-4 text-sm p-2 rounded ${
+              type === "error"
                 ? "bg-red-100 text-red-600"
                 : "bg-green-100 text-green-600"
-              }`}
+            }`}
           >
             {message}
           </p>

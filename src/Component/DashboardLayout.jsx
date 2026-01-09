@@ -1,4 +1,4 @@
-import { Outlet, NavLink, Link } from "react-router-dom";
+import { Outlet, NavLink, Link, Router, useNavigate } from "react-router-dom";
 import { FaUserDoctor } from "react-icons/fa6"
 import { TbNurse } from "react-icons/tb"
 import { LuPill } from "react-icons/lu";
@@ -37,18 +37,53 @@ function DashboardLayout({ children }) {
   ]
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState("")
- useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, [])
+  const navigate = useNavigate()
 
+  // const storedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  
+  //   useEffect(() => {
+  //     console.log("ddd", storedUser)
+  //     if (!storedUser) {
+  //       navigate("/")
+  //     }
+  //   }, [])
+
+
+  // if (!storedUser) {
+  //   return
+  // }    
+
+// const storedUser = JSON.parse(localStorage.getItem("loggeduser"));
+
+// useEffect(()=>{
+//   if(!storedUser){
+//     navigate("/")
+//   }
+// },[])
+
+// if (!storedUser){
+//   return
+// }
+
+const storedUser =JSON.parse(localStorage.getItem("loggedUser"));
+useEffect (()=>{
+  if(!storedUser){
+    navigate("/")
+  }
+},[])
+if (!storedUser){
+  return 
+}
+
+  const handleLogout = () => {
+    localStorage.clear("")
+    navigate("/")
+  }
 
   return (
     <div className="flex h-screen">
-
+      {/* todo */}
+      {/* <Sidbar /> */}
       <div
         className={`bg-[#f3f4f6] flex flex-col transition-all duration-300
         ${collapsed ? "w-[70px]" : "w-[17%]"} p-4`}
@@ -90,26 +125,27 @@ function DashboardLayout({ children }) {
           ))}
         </div>
 
-        <Link to="/" className="mt-auto flex items-center gap-3 p-3 hover:text-orange-700 rounded-md">
-            <FiLogOut />
+        <button className="mt-auto flex items-center gap-3 p-3 hover:text-orange-700 rounded-md" onClick={handleLogout}>
+          <FiLogOut />
           {!collapsed && "Logout"}
-        </Link>
+        </button>
 
       </div>
-
+      {/* todo */}
+      {/* <Content /> */}
       <div className=" w-full p-5 overflow-auto relative">
         <div className="border-b-2 border-e-black h-[30px] relative">
-        
-         <div className="fixed top-4 right-6 z-50 ">
-          <FaUserCircle
-            size={25}
-            className="cursor-pointer text-gray-700 hover:text-primary"
-            onClick={() => setOpen(!open)}
-          />
-         {open && ( <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border ">
+
+          <div className="fixed top-4 right-6 z-50 ">
+            <FaUserCircle
+              size={25}
+              className="cursor-pointer text-gray-700 hover:text-primary"
+              onClick={() => setOpen(!open)}
+            />
+            {open && (<div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border ">
               <ul className="text-sm">
                 <li className="px-4 py-2 hover:text-primary">
-                {user.name}
+                  {user.name}
                 </li>
                 <li className="px-4 py-2 hover:text-primary">
                   {user.email}
@@ -121,7 +157,6 @@ function DashboardLayout({ children }) {
           </div>
 
         </div>
-        {/* <Outlet /> */}
         {children}
       </div>
     </div>

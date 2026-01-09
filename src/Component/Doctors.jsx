@@ -151,7 +151,7 @@ function Doctors() {
           </table>
         </div>
 
-
+        {/* <CreateDoctor /> */}
         {showPopup && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-neutral p-5 rounded shadow w-[350px] h-50vh">
@@ -204,6 +204,8 @@ function Doctors() {
             </div>
           </div>
         )}
+
+        {/* <DeleteDcotor /> */}
         {deleted&&(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-5 rounded shadow w-[300px] text-center relative">

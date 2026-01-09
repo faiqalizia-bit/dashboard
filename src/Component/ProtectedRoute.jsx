@@ -1,11 +1,4 @@
-import { Navigate } from "react-router-dom";
+// Deprecated: ProtectedRoute was part of a previous implementation and is no longer used.
+// You can safely delete this file if you want to remove it from the project.
 
-function ProtectedRoute({ children }) {
-  const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-  if (!loggedUser) {
-    return <Navigate to="/" replace />;
-  }
-  return children;
-}
-
-export default ProtectedRoute;
+export default null
