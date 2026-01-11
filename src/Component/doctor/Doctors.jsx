@@ -1,8 +1,10 @@
-import DashboardLayout from "../Component/DashboardLayout"
+import DashboardLayout from "../DashboardLayout";
 import { useState, useEffect } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md"
 import { MdKeyboardArrowRight } from "react-icons/md";
+import DoctorFormModal from "./DoctorFormModal";
+import DeleteDoctorModal from "./DeleteDoctorModal";
 
 function Doctors() {
   const [search, setSearch] = useState("");
@@ -150,93 +152,23 @@ function Doctors() {
             </tbody>
           </table>
         </div>
-
-        {/* <CreateDoctor /> */}
         {showPopup && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-neutral p-5 rounded shadow w-[350px] h-50vh">
-
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="font-bold text-black">
-                  {editId ? "Edit " : "Add"}
-                </h2>
-                <button
-                  onClick={closePopup}
-                  className="text-primary font-bold text-lg hover:text-red-500"
-                >
-                  x
-                </button>
-              </div>
-
-              <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  className="border p-2 rounded"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="border p-2 rounded"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-
-                <div className="flex justify-end gap-2 mt-3">
-                  <button
-                    type="button"
-                    onClick={closePopup}
-                    className="px-3 py-1  rounded bg-primary text-neutral"
-                  >
-                    Cancel
-                  </button>
-
-                  <button className="bg-primary text-neutral px-4 py-1 rounded">
-                    {editId ? "Save" : "Add"}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <DoctorFormModal
+            name={name}
+            email={email}
+            setName={setName}
+            setEmail={setEmail}
+            editId={editId}
+            onClose={closePopup}
+            onSubmit={handleSubmit}
+          />
         )}
 
-        {/* <DeleteDcotor /> */}
-        {deleted&&(
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-5 rounded shadow w-[300px] text-center relative">
-            
-              <button 
-              onClick={cancelDelete}
-              className="absolute top-2 right-2 text-gray-500 hover:text-red-600 font-bold text-lg">x</button> 
-            
-             <h2 className="text-lg font-bold mb-4 ">Confirm Delete</h2>
-             <p className="mb-5">Are you sure you want to delete this nurse?</p>
-
-            <div className="flex justify-center gap-2 mt-3">
-              <button
-                type="button"
-                onClick={cancelDelete}
-                className="px-3 py-1  rounded bg-gray-400 text-neutral"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="px-3 py-1  rounded bg-primary text-neutral"
-              >
-                Delete
-              </button>
-
-            </div>
-          </div>
-        </div>
+         {deleted && (
+          <DeleteDoctorModal
+            onCancel={() => setDeleted(null)}
+            onDelete={handleDelete}
+          />
         )}
       </div>
     </DashboardLayout>

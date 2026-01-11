@@ -3,10 +3,10 @@ import { Routes, Route, Navigate, Link } from 'react-router-dom'
 import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Dashboard from './Pages/dashbord'
-import DashboardLayout from './Component/DashboardLayout' 
-import Doctors from './Component/Doctors'
-import Patients from './Component/Patients'
-import Nurses from './Component/nurses'
+import Doctors from './Component/doctor/Doctors'
+import Patients from './Component/patients/Patients'
+// import Nurses from './Component/nurses'
+import Nurses from './Component/nurses/Nurses'
 
 function App() {
   return (

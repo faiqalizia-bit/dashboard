@@ -37,6 +37,7 @@ function DashboardLayout({ children }) {
   ]
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null)
   const navigate = useNavigate()
 
   // const storedUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -70,13 +71,16 @@ useEffect (()=>{
   if(!storedUser){
     navigate("/")
   }
+  else {
+    setUser(storedUser);
+  }
 },[])
 if (!storedUser){
   return 
 }
 
   const handleLogout = () => {
-    localStorage.clear("")
+    
     navigate("/")
   }
 
