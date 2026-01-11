@@ -1,5 +1,5 @@
 // import DashboardLayout from "./DashboardLayout"
-import DashboardLayout from "../DashboardLayout";
+import DashboardLayout from "../dashboardlatout/DashboardLayout";
 import { useState, useEffect } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md"
