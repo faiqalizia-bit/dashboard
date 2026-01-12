@@ -1,4 +1,3 @@
-// import DashboardLayout from "./DashboardLayout"
 import DashboardLayout from "../dashboardlatout/DashboardLayout";
 import { useState, useEffect } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
@@ -6,6 +5,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md"
 import { MdKeyboardArrowRight } from "react-icons/md";
 import NurseFormModal from "./NusrseFormModal";
 import DeleteNurseModal from "./DeleteNurseModal";
+import NursesTable from "./NursesTable";
 
 
 function Nurses() {
@@ -15,6 +15,7 @@ function Nurses() {
     const [editId, setEditId] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [deleted, setDeleted] = useState(false)
+    const [status, setStatus] = useState("");//
 
     const [nurses, setNurses] = useState(() => {
         try {
@@ -30,11 +31,12 @@ function Nurses() {
             id: Date.now(),
             name,
             email,
+            status,//
         };
         if (editId) {
             setNurses((prev) =>
                 prev.map((nun) =>
-                    nun.id === editId ? { ...nun, name, email } : nun
+                    nun.id === editId ? { ...nun, name, email, status } : nun
                 )
             );
         } else {
@@ -48,6 +50,7 @@ function Nurses() {
         setEditId(null);
         setName("");
         setEmail("");
+        setStatus("");//
     };
 
     useEffect(() => {
@@ -93,7 +96,7 @@ function Nurses() {
     return (
         <DashboardLayout>
             <div className="mb-10 relative py-2">
-                <h1 className="text-sm font-bold mb-4"> <div className="flex gap-[1px] items-center">Dashbord<span className="mt-[2px]"><MdKeyboardArrowRight /></span>Nurses</div></h1>
+                <h1 className="text-lg font-bold mb-4"> <div className="flex gap-[1px] items-center">Dashbord<span className="mt-[2px]"><MdKeyboardArrowRight /></span>Nurses</div></h1>
 
                 <div className="flex gap-3 mb-5">
                     <input
@@ -113,7 +116,7 @@ function Nurses() {
                 </div>
 
 
-                <div className="bg-white rounded shadow overflow-x-auto">
+                {/* <div className="bg-white rounded shadow overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-gray-100">
                             <tr>
@@ -154,7 +157,13 @@ function Nurses() {
                             )}
                         </tbody>
                     </table>
-                </div>
+                </div> */}
+
+                <NursesTable
+                    nurses={filteredNurses}
+                    onEdit={editNurse}
+                    onDelete={confirmDeleteNurse}
+                />
 
                 {showPopup && (
                     <NurseFormModal
@@ -165,6 +174,8 @@ function Nurses() {
                         editId={editId}
                         onClose={closePopup}
                         onSubmit={handleSubmit}
+                        status={status}//
+                        setStatus={setStatus}
                     />
                 )}
 

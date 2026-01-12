@@ -5,6 +5,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md"
 import { MdKeyboardArrowRight } from "react-icons/md";
 import DoctorFormModal from "./DoctorFormModal";
 import DeleteDoctorModal from "./DeleteDoctorModal";
+import DoctorsTable from "./DoctorsTable";
 
 function Doctors() {
   const [search, setSearch] = useState("");
@@ -12,8 +13,9 @@ function Doctors() {
   const [email, setEmail] = useState("");
   const [editId, setEditId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [deleted,setDeleted]= useState(false)
-  
+  const [deleted, setDeleted] = useState(false)
+  const [status, setStatus] = useState("");//
+
   const [doctors, setDoctors] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("doctors")) || [];
@@ -28,24 +30,26 @@ function Doctors() {
       id: Date.now(),
       name,
       email,
+      status,//
     };
-      if (editId) {
+    if (editId) {
       setDoctors((prev) =>
         prev.map((doc) =>
-          doc.id === editId ? { ...doc, name, email } : doc
+          doc.id === editId ? { ...doc, name, email, status } : doc
         )
       );
     } else {
-    setDoctors((prev) => [...prev, newDoctor]);
-  }
-  closePopup();
-};
+      setDoctors((prev) => [...prev, newDoctor]);
+    }
+    closePopup();
+  };
 
   const closePopup = () => {
     setShowPopup(false);
     setEditId(null);
     setName("");
     setEmail("");
+    setStatus("");//
   };
 
   useEffect(() => {
@@ -56,31 +60,31 @@ function Doctors() {
     }
   }, [doctors]);
 
-    const editDr = (doctor) => {
+  const editDr = (doctor) => {
     setEditId(doctor.id);
     setName(doctor.name);
     setEmail(doctor.email);
-    setShowPopup(true);
+    setShowPopup(true);//
   };
 
   const delDr = (id) => {
-  setDoctors((prevDoctors) =>
-    prevDoctors.filter((doctor) => doctor.id !== id)
-  );
-};
+    setDoctors((prevDoctors) =>
+      prevDoctors.filter((doctor) => doctor.id !== id)
+    );
+  };
 
- const filteredDoctors = doctors.filter(
+  const filteredDoctors = doctors.filter(
     (doc) =>
-        doc.name.toLowerCase().includes(search.toLowerCase()) ||
-        doc.email.toLowerCase().includes(search.toLowerCase())
+      doc.name.toLowerCase().includes(search.toLowerCase()) ||
+      doc.email.toLowerCase().includes(search.toLowerCase())
   );
-   const confirmDeleteDoctor = (id) => {
-    setDeleted(id); 
+  const confirmDeleteDoctor = (id) => {
+    setDeleted(id);
   };
 
   const handleDelete = () => {
     setDoctors((prev) => prev.filter((n) => n.id !== deleted));
-    setDeleted(null); 
+    setDeleted(null);
   };
 
   const cancelDelete = () => setDeleted(null);
@@ -90,7 +94,7 @@ function Doctors() {
   return (
     <DashboardLayout>
       <div className="mb-10 relative py-2">
-        <h1 className="text-sm font-bold mb-4"> <div className="flex gap-[1px] items-center">Dashbord<span className="mt-[2px]"><MdKeyboardArrowRight/> </span>Nurses</div></h1>
+        <h1 className="text-lg font-bold mb-4"> <div className="flex gap-[1px] items-center">Dashboard<span className="mt-[2px]"><MdKeyboardArrowRight /> </span>Doctors</div></h1>
 
         <div className="flex gap-3 mb-5">
           <input
@@ -110,7 +114,7 @@ function Doctors() {
         </div>
 
 
-        <div className="bg-white rounded shadow overflow-x-auto">
+        {/* <div className="bg-white rounded shadow overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-gray-100">
               <tr>
@@ -151,7 +155,13 @@ function Doctors() {
               )}
             </tbody>
           </table>
-        </div>
+        </div> */}
+
+        <DoctorsTable
+          doctors={filteredDoctors}
+          onEdit={editDr}
+          onDelete={confirmDeleteDoctor}
+        />
         {showPopup && (
           <DoctorFormModal
             name={name}
@@ -161,10 +171,12 @@ function Doctors() {
             editId={editId}
             onClose={closePopup}
             onSubmit={handleSubmit}
+            status={status}//
+            setStatus={setStatus}
           />
         )}
 
-         {deleted && (
+        {deleted && (
           <DeleteDoctorModal
             onCancel={() => setDeleted(null)}
             onDelete={handleDelete}

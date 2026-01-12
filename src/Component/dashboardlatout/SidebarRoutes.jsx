@@ -19,11 +19,11 @@ function SidebarRoutes({ collapsed }) {
           key={idx}
           to={item.path}
           className={({ isActive }) =>
-            `flex items-center gap-3 p-3 rounded-md transition-all
+            `flex items-center gap-3 p-3 rounded-md transition-all tracking-[1px]
             ${isActive ? "bg-primary text-white" : "hover:text-orange-700"}`
           }
         >
-          <span className="text-lg">{item.icon}</span>
+          <span className="text-lg font-bold">{item.icon}</span>
           {!collapsed && <span>{item.title}</span>}
         </NavLink>
       ))}

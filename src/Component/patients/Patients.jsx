@@ -5,6 +5,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md"
 import { MdKeyboardArrowRight } from "react-icons/md";
 import PatientFormModal from "./PatientFormModal";
 import DeletePatientModal from "./DeletePaitientModal";
+import PatientsTable from "./PatientsTable";
 
 
 function Patients() {
@@ -14,6 +15,7 @@ function Patients() {
     const [editId, setEditId] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [deleted, setDeleted] = useState(false)
+    const [status, setStatus] = useState("");//
 
     const [patients, setPatients] = useState(() => {
         try {
@@ -29,6 +31,7 @@ function Patients() {
             id: Date.now(),
             name,
             email,
+            status
         };
         if (editId) {
             setPatients((prev) =>
@@ -47,6 +50,7 @@ function Patients() {
         setEditId(null);
         setName("");
         setEmail("");
+        setStatus("")
     };
 
     useEffect(() => {
@@ -109,7 +113,7 @@ function Patients() {
                 </div>
 
 
-                <div className="bg-white rounded shadow overflow-x-auto">
+                {/* <div className="bg-white rounded shadow overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-gray-100">
                             <tr>
@@ -150,7 +154,13 @@ function Patients() {
                             )}
                         </tbody>
                     </table>
-                </div>
+                </div> */}
+
+                <PatientsTable
+                    patients={filteredpatients}
+                    onEdit={editPatients}
+                    onDelete={confirmDeletePatient}
+                />
 
                 {showPopup && (
                     <PatientFormModal
@@ -161,6 +171,8 @@ function Patients() {
                         editId={editId}
                         onClose={closePopup}
                         onSubmit={handleSubmit}
+                         status={status}//
+                        setStatus={setStatus}
                     />
                 )}
 

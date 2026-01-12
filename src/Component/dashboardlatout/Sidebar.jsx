@@ -6,7 +6,7 @@ import { FiLogOut } from "react-icons/fi";
 function Sidebar({ collapsed, setCollapsed, onLogout }) {
   return (
     <div
-      className={`bg-[#f3f4f6] flex flex-col transition-all duration-300
+      className={`bg-[#f3f4f6] flex flex-col transition-all pt-10 duration-300
       ${collapsed ? "w-[70px]" : "w-[17%]"} p-4`}
     >
       <div className="flex items-center justify-between mb-4">

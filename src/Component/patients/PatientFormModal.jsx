@@ -6,6 +6,8 @@ function PatientFormModal({
   editId,
   onClose,
   onSubmit,
+   status,
+  setStatus,
 }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -32,6 +34,17 @@ function PatientFormModal({
             required
             className="border p-2 rounded"
           />
+
+           <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            required
+            className="border p-2 rounded"
+          >
+            <option value="">Select Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
 
           <div className="flex justify-end gap-2">
             <button type="button" onClick={onClose} className="bg-primary text-white px-3 py-1 rounded">
