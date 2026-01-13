@@ -1,11 +1,14 @@
-function Card({ title, value, children, recentCard = "false", key, activeCount, inActiveCount }) {
+function Card({ icon, title, value, children, recentCard = "false", idx, activeCount, inActiveCount }) {
 
   return (
-    <div className="w-full bg-white p-5 rounded shadow" key={key}>
+    <div className="w-full bg-white p-5 rounded shadow" key={idx}>
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-xl font-bold">{title}</h3>
+        <div className="flex items-center gap-[5px]">
+          {recentCard !== "true" && <span style={{ fontSize: "12px" }} className="text-lg  bg-primary rounded-full p-2 text-white">{icon} </span>}
+          <h3 className="text-xl font-bold">{title}</h3>
+        </div>
         {recentCard !== "true" &&
-          <p className="flex justify-center items-center text-lg font-medium bg-primary p-2 size-[35px] rounded-full text-white ">{value}</p>
+          <p className="flex justify-center items-center text-3xl font-bold   ">{value}</p>
         }
       </div>
       {recentCard !== "true" &&

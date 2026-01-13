@@ -11,8 +11,8 @@ function Sidebar({ collapsed, setCollapsed, onLogout }) {
     >
       <div className="flex items-center justify-between mb-4">
         {!collapsed && (
-          <h1 className="font-bold text-lg flex items-center gap-2">
-            <FaHospital /> Care Health
+          <h1 className="font-bold text-2xl flex items-center gap-2">
+            <FaHospital />   Care Health
           </h1>
         )}
 
@@ -31,6 +31,7 @@ function Sidebar({ collapsed, setCollapsed, onLogout }) {
         className="mt-auto flex items-center gap-3 p-3 hover:text-orange-700 rounded-md"
       >
         <FiLogOut />
+        {/* Logout */}
         {!collapsed && "Logout"}
       </button>
     </div>

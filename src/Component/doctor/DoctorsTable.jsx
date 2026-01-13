@@ -22,8 +22,8 @@ function DoctorsTable({ doctors, onEdit, onDelete, showActions="true" }) {
               </td>
             </tr>
           ) : (
-            doctors.map((item) => (
-              <tr key={item.id} className="bg-neutral">
+            doctors.map((item, idx) => (
+              <tr key={idx} className="bg-neutral">
                 <td className="border p-2">{item.name}</td>
                 <td className="border p-2">{item.email}</td>
               {showActions &&(  <td className="border p-2 space-x-2">
