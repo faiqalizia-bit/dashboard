@@ -33,8 +33,8 @@ function DashboardContent() {
   const guardStatus = getStatusCounts(guard)
 
   useEffect(() => {
-    setDoctors(JSON.parse(localStorage.getItem("doctors")) || []);
-    setNurses(JSON.parse(localStorage.getItem("nurses")) || []);
+    // setDoctors(JSON.parse(localStorage.getItem("doctors")) || []);
+    // setNurses(JSON.parse(localStorage.getItem("nurses")) || []);
     setPatients(JSON.parse(localStorage.getItem("patients")) || []);
     setWardBoys(JSON.parse(localStorage.getItem("wardboys")) || []);
     setDepartment(JSON.parse(localStorage.getItem("department")) || []);

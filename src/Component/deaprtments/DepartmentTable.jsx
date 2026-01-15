@@ -11,8 +11,9 @@ function DepartmentTable({ department, onEdit, onDelete, showActions="true" }) {
                <tr>
                  <th className="border p-2">Name</th>
                  <th className="border p-2">Email</th>
+                  <th className="border p-2">Status</th>
                  {showActions &&(<th className="border p-2">Actions</th>)}
-                 <th className="border p-2">Status</th>
+                
                </tr>
              </thead>
      
@@ -24,26 +25,27 @@ function DepartmentTable({ department, onEdit, onDelete, showActions="true" }) {
                                </td>
                            </tr>
                        ) : (
-                          department.map((item) => (
-                               <tr key={item.id} className="bg-neutral">
-                                   <td className="border p-2">{item.name}</td>
-                                   <td className="border p-2">{item.email}</td>
+                          department.map((d) => (
+                               <tr key={d._id} className="bg-neutral">
+                                   <td className="border p-2">{d.name}</td>
+                                   <td className="border p-2">{d.email}</td>
+                                   <td className="border p-2">{d.status}</td>
                                    <td className="border p-2 space-x-2">
                                        <button
-                                           onClick={() => onEdit(item)}
+                                           onClick={() => onEdit(d)}
                                            className="px-3 py-1 text-secondary"
                                        >
                                            <MdOutlineModeEditOutline />
                                        </button>
    
                                        <button
-                                           onClick={() => onDelete(item.id)}
+                                           onClick={() => onDelete(d.id)}
                                            className="px-3 py-1 text-black"
                                        >
                                            <AiTwotoneDelete />
                                        </button>
                                    </td>
-                                   <td className="border p-2">{item.status}</td>
+                                   
                                </tr>
                            ))
                        )}

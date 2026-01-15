@@ -6,6 +6,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import DoctorFormModal from "./DoctorFormModal";
 import DeleteDoctorModal from "./DeleteDoctorModal";
 import DoctorsTable from "./DoctorsTable";
+import API from "../../api";
 
 function Doctors() {
   const [search, setSearch] = useState("");
@@ -14,34 +15,49 @@ function Doctors() {
   const [editId, setEditId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [deleted, setDeleted] = useState(false)
-  const [status, setStatus] = useState("");//
+  const [status, setStatus] = useState("");
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [doctors, setDoctors] = useState(() => {
+  const fetchDoctors = async () => {
     try {
-      return JSON.parse(localStorage.getItem("doctors")) || [];
-    } catch {
-      return [];
+      const res = await API.get("doctors");
+      setDoctors(res.data);
+    } catch (err) {
+      console.error(err);
     }
-  });
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newDoctor = {
-      id: Date.now(),
-      name,
-      email,
-      status,//
-    };
-    if (editId) {
-      setDoctors((prev) =>
-        prev.map((doc) =>
-          doc.id === editId ? { ...doc, name, email, status } : doc
-        )
-      );
-    } else {
-      setDoctors((prev) => [...prev, newDoctor]);
+    let response;
+    try {
+      setLoading(true)
+      if (editId) {
+        response = await API.put(`/doctors/${editId}`, { name, email, status });
+      } else {
+        response = await API.post("/doctors", { name, email, status });
+      }
+      if (response) {
+        fetchDoctors();
+        setLoading(false)
+      }
+      closePopup();
+    } catch (err) {
+      console.error(err);
+      setLoading(false)
     }
-    closePopup();
+  };
+
+
+  const handleDelete = async () => {
+    try {
+      await API.delete(`/doctors/${deleted}`);
+      fetchDoctors();
+      setDeleted(null);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const closePopup = () => {
@@ -53,17 +69,15 @@ function Doctors() {
   };
 
   useEffect(() => {
-    try {
-      localStorage.setItem("doctors", JSON.stringify(doctors));
-    } catch (e) {
-      console.error("Failed to save doctors to localStorage", e);
-    }
-  }, [doctors]);
+    fetchDoctors();
+
+  }, []);
 
   const editDr = (doctor) => {
-    setEditId(doctor.id);
+    setEditId(doctor._id);
     setName(doctor.name);
     setEmail(doctor.email);
+    setStatus(doctor.status);
     setShowPopup(true);//
   };
 
@@ -82,12 +96,6 @@ function Doctors() {
     setDeleted(id);
   };
 
-  const handleDelete = () => {
-    setDoctors((prev) => prev.filter((n) => n.id !== deleted));
-    setDeleted(null);
-  };
-
-  const cancelDelete = () => setDeleted(null);
 
 
 
@@ -114,49 +122,6 @@ function Doctors() {
         </div>
 
 
-        {/* <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="border p-2">Name</th>
-                <th className="border p-2">Email</th>
-                <th className="border p-2">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredDoctors.length === 0 ? (
-                <tr>
-                  <td colSpan="3" className="text-center p-4">
-                    No data found
-                  </td>
-                </tr>
-              ) : (
-                filteredDoctors.map((item, index) => (
-                  <tr key={item.id} className="text-left bg-neutral">
-                    <td className="border p-2">{item.name}</td>
-                    <td className="border p-2">{item.email}</td>
-                    <td className="border p-2 space-x-2">
-                      <button
-                        onClick={() => editDr(item)}
-                        className=" px-3 py-1 rounded text-secondary"
-                      >
-                        <MdOutlineModeEditOutline />
-                      </button>
-                      <button
-                        onClick={() =>  confirmDeleteDoctor(item.id)}
-                        className=" px-3 py-1 rounded text-black"
-                      >
-                        <AiTwotoneDelete />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div> */}
-
         <DoctorsTable
           doctors={filteredDoctors}
           onEdit={editDr}
@@ -173,6 +138,7 @@ function Doctors() {
             onSubmit={handleSubmit}
             status={status}//
             setStatus={setStatus}
+            loading={loading}
           />
         )}
 
@@ -188,3 +154,10 @@ function Doctors() {
 }
 
 export default Doctors
+
+
+
+
+
+
+

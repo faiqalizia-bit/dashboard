@@ -5,6 +5,7 @@ import DashboardLayout from '../dashboardlatout/DashboardLayout'
 import GuardsTable from './GuardsTable';
 import GuardsFormModal from './GuardsFormModal';
 import GuardDeleteModal from './GuardDeleteModal';
+import API from '../../api';
 
 function Guards() {
     const [search, setSearch] = useState("");
@@ -15,33 +16,45 @@ function Guards() {
     const [deleted, setDeleted] = useState(false)
     const [status, setStatus] = useState("");
 
-    const [guard, setGuard] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem("guards")) || [];
-        } catch {
-            return [];
-        }
-    });
+    const [guard, setGuard] = useState([]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const newGuard = {
-            id: Date.now(),
-            name,
-            email,
-            status,//
-        };
-        if (editId) {
-            setGuard((prev) =>
-                prev.map((w) =>
-                    w.id === editId ? { ...w, name, email, status } : w
-                )
-            );
-        } else {
-            setGuard((prev) => [...prev, newGuard]);
-        }
-        closePopup();
-    };
+   const fetchGuards = async () => {
+   try{
+    const res = await API.get("guards");
+    setGuard(res.data);
+  } 
+ catch (err) {
+    console.error(err);
+  }
+   };
+
+   const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    if (editId) {
+      const res = await API.put(`/guards/${editId}`, { name, email, status });
+    } else {
+      const res = await API.post("/guards", { name, email, status });
+    }
+    fetchGuards();
+    closePopup();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const handleDelete = async () => {
+  try {
+    await API.delete(`/guards/${deleted}`);
+    fetchGuards();
+    setDeleted(null);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+
 
     const closePopup = () => {
         setShowPopup(false);
@@ -52,12 +65,9 @@ function Guards() {
     };
 
     useEffect(() => {
-        try {
-            localStorage.setItem("guards", JSON.stringify(guard));
-        } catch (e) {
-            console.error("Failed to save WardBoys to localStorage", e);
-        }
-    }, [guard]);
+
+        fetchGuards();
+    }, []);
 
     const editDr = (w) => {
         setEditId(w.id);
@@ -82,10 +92,6 @@ function Guards() {
         setDeleted(id);
     };
 
-    const handleDelete = () => {
-        setGuard((prev) => prev.filter((n) => n.id !== deleted));
-        setDeleted(null);
-    };
 
     return (
         <DashboardLayout>

@@ -6,6 +6,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import NurseFormModal from "./NusrseFormModal";
 import DeleteNurseModal from "./DeleteNurseModal";
 import NursesTable from "./NursesTable";
+import API from "../../api";
 
 
 function Nurses() {
@@ -17,33 +18,46 @@ function Nurses() {
     const [deleted, setDeleted] = useState(false)
     const [status, setStatus] = useState("");//
 
-    const [nurses, setNurses] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem("nurses")) || [];
-        } catch {
-            return [];
-        }
-    });
+    const [nurses, setNurses] = useState([])
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const newnurse = {
-            id: Date.now(),
-            name,
-            email,
-            status,//
-        };
-        if (editId) {
-            setNurses((prev) =>
-                prev.map((nun) =>
-                    nun.id === editId ? { ...nun, name, email, status } : nun
-                )
-            );
-        } else {
-            setNurses((prev) => [...prev, newnurse]);
-        }
-        closePopup();
-    };
+
+     const fetchNurses = async () => {
+  try {
+    const res = await API.get("nurses");
+    setNurses(res.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    if (editId) {
+      const res = await API.put(`/nurses/${editId}`, { name, email, status });
+    } else {
+      const res = await API.post("/nurses", { name, email, status });
+    }
+    fetchNurses();
+    closePopup();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+const handleDelete = async () => {
+  try {
+    await API.delete(`/nurses/${deleted}`);
+    fetchNurses();
+    setDeleted(null);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
 
     const closePopup = () => {
         setShowPopup(false);
@@ -54,24 +68,15 @@ function Nurses() {
     };
 
     useEffect(() => {
-        try {
-            localStorage.setItem("nurses", JSON.stringify(nurses));
-        } catch (e) {
-            console.error("Failed to save nurses to localStorage", e);
-        }
-    }, [nurses]);
+     fetchNurses()
+    }, []);
 
     const editNurse = (nurse) => {
-        setEditId(nurse.id);
+        setEditId(nurse._id);
         setName(nurse.name);
         setEmail(nurse.email);
+        setStatus(nurse.status)
         setShowPopup(true);
-    };
-
-    const delNurse = (id) => {
-        setNurses((prevNurses) =>
-            prevNurses.filter((nurse) => nurse.id !== id)
-        );
     };
 
     const filteredNurses = nurses.filter(
@@ -84,13 +89,7 @@ function Nurses() {
         setDeleted(id);
     };
 
-    const handleDelete = () => {
-        setNurses((prev) => prev.filter((n) => n.id !== deleted));
-        setDeleted(null);
-    };
-
-    const cancelDelete = () => setDeleted(null);
-
+   
 
 
     return (
@@ -116,48 +115,6 @@ function Nurses() {
                 </div>
 
 
-                {/* <div className="bg-white rounded shadow overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead className="bg-gray-100">
-                            <tr>
-                                <th className="border p-2">Name</th>
-                                <th className="border p-2">Email</th>
-                                <th className="border p-2">Actions</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {filteredNurses.length === 0 ? (
-                                <tr>
-                                    <td colSpan="4" className="text-center p-4">
-                                        No data found
-                                    </td>
-                                </tr>
-                            ) : (
-                                filteredNurses.map((item, index) => (
-                                    <tr key={item.id} className="text-left bg-neutral">
-                                        <td className="border p-2">{item.name}</td>
-                                        <td className="border p-2">{item.email}</td>
-                                        <td className="border p-2 space-x-2">
-                                            <button
-                                                onClick={() => editNurse(item)}
-                                                className=" px-3 py-1 rounded text-secondary"
-                                            >
-                                                <MdOutlineModeEditOutline />
-                                            </button>
-                                            <button
-                                                onClick={() => confirmDeleteNurse(item.id)}
-                                                className=" px-3 py-1 rounded text-secondary"
-                                            >
-                                                <AiTwotoneDelete />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div> */}
 
                 <NursesTable
                     nurses={filteredNurses}
@@ -192,3 +149,8 @@ function Nurses() {
 }
 
 export default Nurses
+
+
+
+
+

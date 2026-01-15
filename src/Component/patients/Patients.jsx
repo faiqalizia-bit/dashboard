@@ -6,6 +6,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import PatientFormModal from "./PatientFormModal";
 import DeletePatientModal from "./DeletePaitientModal";
 import PatientsTable from "./PatientsTable";
+import API from "../../api";
 
 
 function Patients() {
@@ -17,73 +18,79 @@ function Patients() {
     const [deleted, setDeleted] = useState(false)
     const [status, setStatus] = useState("");//
 
-    const [patients, setPatients] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem("patients")) || [];
-        } catch {
-            return [];
-        }
-    })
+    const [patients, setPatients] = useState([]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const newPatients = {
-            id: Date.now(),
-            name,
-            email,
-            status
-        };
-        if (editId) {
-            setPatients((prev) =>
-                prev.map((p) =>
-                    p.id === editId ? { ...p, name, email } : p
-                )
-            );
-        } else {
-            setPatients((prev) => [...prev, newPatients]);
+
+
+    const fetchPatients = async () => {
+        try {
+            const res = await API.get("patients");
+            setPatients(res.data);
+        } catch (err) {
+            console.error(err);
         }
-        closePopup();
     };
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (editId) {
+                const res = await API.put(`/patients/${editId}`, { name, email, status });
+            } else {
+                const res = await API.post("/patients", { name, email, status });
+            }
+            fetchPatients();
+            closePopup();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+
+    const handleDelete = async () => {
+        try {
+            await API.delete(`/patients/${deleted}`);
+            fetchPatients();
+            setDeleted(null);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+
 
     const closePopup = () => {
         setShowPopup(false);
         setEditId(null);
         setName("");
         setEmail("");
-        setStatus("")
+        setStatus("");//
     };
 
-    useEffect(() => {
-        try {
-            localStorage.setItem("patients", JSON.stringify(patients));
-        } catch (e) {
-            console.error("Failed to save patients to localStorage", e);
-        }
-    }, [patients]);
+
+     useEffect(() => {
+        fetchPatients()
+
+    }, []);
+
+
 
     const editPatients = (patient) => {
-        setEditId(patient.id);
+        setEditId(patient._id);
         setName(patient.name);
         setEmail(patient.email);
+        setStatus(patient.status)
         setShowPopup(true);
     };
 
-    const delPatients = (id) => {
-        setPatients((prevPatients) =>
-            prevPatients.filter((patient) => patient.id !== id)
-        );
-    };
 
     const confirmDeletePatient = (id) => {
         setDeleted(id);
     };
 
-    const handleDelete = () => {
-        setPatients((prev) => prev.filter((n) => n.id !== deleted));
-        setDeleted(null);
-    };
 
-    const cancelDelete = () => setDeleted(null);
+
 
     const filteredpatients = patients.filter(
         (nun) =>
@@ -113,49 +120,6 @@ function Patients() {
                 </div>
 
 
-                {/* <div className="bg-white rounded shadow overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead className="bg-gray-100">
-                            <tr>
-                                <th className="border p-2">Name</th>
-                                <th className="border p-2">Email</th>
-                                <th className="border p-2">Actions</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {filteredpatients.length === 0 ? (
-                                <tr>
-                                    <td colSpan="4" className="text-center p-4">
-                                        No data found
-                                    </td>
-                                </tr>
-                            ) : (
-                                filteredpatients.map((item, index) => (
-                                    <tr key={item.id} className="text-left bg-neutral">
-                                        <td className="border p-2">{item.name}</td>
-                                        <td className="border p-2">{item.email}</td>
-                                        <td className="border p-2 space-x-2">
-                                            <button
-                                                onClick={() => editPatients(item)}
-                                                className=" px-3 py-1 rounded text-secondary"
-                                            >
-                                                <MdOutlineModeEditOutline />
-                                            </button>
-                                            <button
-                                                onClick={() => confirmDeletePatient(item.id)}
-                                                className=" px-3 py-1 rounded text-secondary"
-                                            >
-                                                <AiTwotoneDelete />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div> */}
-
                 <PatientsTable
                     patients={filteredpatients}
                     onEdit={editPatients}
@@ -171,7 +135,7 @@ function Patients() {
                         editId={editId}
                         onClose={closePopup}
                         onSubmit={handleSubmit}
-                         status={status}//
+                        status={status}//
                         setStatus={setStatus}
                     />
                 )}
@@ -191,3 +155,9 @@ function Patients() {
 }
 
 export default Patients
+
+
+
+
+
+

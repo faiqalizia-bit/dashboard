@@ -8,7 +8,8 @@ function DoctorFormModal({
   onSubmit,
   status,//
   setStatus,//
-  
+  loading,
+
 }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -16,7 +17,7 @@ function DoctorFormModal({
         <div className="flex justify-between mb-4">
           <h2 className="font-bold">{editId ? "Edit Doctor" : "Add Doctor"}</h2>
           <button onClick={onClose}
-           className="text-primary font-bold text-lg hover:text-red-500"
+            className="text-primary font-bold text-lg hover:text-red-500"
           >x</button>
         </div>
 
@@ -35,7 +36,7 @@ function DoctorFormModal({
             required
             className="border p-2 rounded"
           />
- {/* kucjh */}
+          {/* kucjh */}
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
@@ -52,7 +53,7 @@ function DoctorFormModal({
               Cancel
             </button>
             <button className="bg-primary text-white px-4 py-1 rounded">
-              {editId ? "Save" : "Add"}
+              {loading ? "Processing.." :  editId ? "Update" : "Add"}
             </button>
           </div>
         </form>

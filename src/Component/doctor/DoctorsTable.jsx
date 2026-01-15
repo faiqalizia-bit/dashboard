@@ -9,8 +9,9 @@ function DoctorsTable({ doctors, onEdit, onDelete, showActions="true" }) {
           <tr>
             <th className="border p-2">Name</th>
             <th className="border p-2">Email</th>
-            {showActions &&(<th className="border p-2">Actions</th>)}
             <th className="border p-2">Status</th>
+            {showActions &&(<th className="border p-2">Actions</th>)}
+            
           </tr>
         </thead>
 
@@ -22,20 +23,21 @@ function DoctorsTable({ doctors, onEdit, onDelete, showActions="true" }) {
               </td>
             </tr>
           ) : (
-            doctors.map((item, idx) => (
-              <tr key={idx} className="bg-neutral">
-                <td className="border p-2">{item.name}</td>
-                <td className="border p-2">{item.email}</td>
+            doctors.map((doc) => (
+              <tr key={doc._id} className="bg-neutral">
+                <td className="border p-2">{doc.name}</td>
+                <td className="border p-2">{doc.email}</td>
+                 <td className="border p-2">{doc.status}</td>
               {showActions &&(  <td className="border p-2 space-x-2">
                   <button
-                    onClick={() => onEdit(item)}
+                    onClick={() => onEdit(doc)}
                     className="px-3 py-1 text-secondary"
                   >
                     <MdOutlineModeEditOutline />
                   </button>
 
                   <button
-                    onClick={() => onDelete(item.id)}
+                    onClick={() => onDelete(doc._id)}
                     className="px-3 py-1 text-black"
                   >
                     <AiTwotoneDelete />
@@ -43,7 +45,7 @@ function DoctorsTable({ doctors, onEdit, onDelete, showActions="true" }) {
                 </td>
                 )}
                 {/* ku */}
-                 <td className="border p-2">{item.status}</td>
+                
               </tr>
             ))
           )}

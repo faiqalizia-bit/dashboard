@@ -9,8 +9,8 @@ function NursesTable({nurses, onEdit, onDelete}) {
                     <tr>
                         <th className="border p-2">Name</th>
                         <th className="border p-2">Email</th>
-                        <th className="border p-2">Actions</th>
                         <th className="border p-2">Status</th>
+                        <th className="border p-2">Actions</th>
                     </tr>
                 </thead>
 
@@ -22,26 +22,27 @@ function NursesTable({nurses, onEdit, onDelete}) {
                             </td>
                         </tr>
                     ) : (
-                        nurses.map((item) => (
-                            <tr key={item.id} className="bg-neutral">
-                                <td className="border p-2">{item.name}</td>
-                                <td className="border p-2">{item.email}</td>
+                        nurses.map((nun) => (
+                            <tr key={nun._id} className="bg-neutral">
+                                <td className="border p-2">{nun.name}</td>
+                                <td className="border p-2">{nun.email}</td>
+                                  <td className="border p-2">{nun.status}</td>
                                 <td className="border p-2 space-x-2">
                                     <button
-                                        onClick={() => onEdit(item)}
+                                        onClick={() => onEdit(nun)}
                                         className="px-3 py-1 text-secondary"
                                     >
                                         <MdOutlineModeEditOutline />
                                     </button>
 
                                     <button
-                                        onClick={() => onDelete(item.id)}
+                                        onClick={() => onDelete(nun._id)}
                                         className="px-3 py-1 text-black"
                                     >
                                         <AiTwotoneDelete />
                                     </button>
                                 </td>
-                                <td className="border p-2">{item.status}</td>
+                              
                             </tr>
                         ))
                     )}

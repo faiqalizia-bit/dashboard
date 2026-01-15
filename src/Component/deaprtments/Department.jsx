@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { FcDepartment } from "react-icons/fc";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import DepartmentFormModal from './departmentFormModal';
+import API from '../../api';
+
 function Department() {
     const [search, setSearch] = useState("");
     const [name, setName] = useState("");
@@ -14,33 +16,73 @@ function Department() {
     const [deleted, setDeleted] = useState(false)
     const [status, setStatus] = useState("");
 
-    const [department, setDepartment] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem("department")) || [];
-        } catch {
-            return [];
-        }
-    });
+    const [department, setDepartment] = useState([])
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const newWardboy = {
-            id: Date.now(),
-            name,
-            email,
-            status,//
-        };
-        if (editId) {
-            setDepartment((prev) =>
-                prev.map((w) =>
-                    w.id === editId ? { ...w, name, email, status } : w
-                )
-            );
-        } else {
-            setDepartment((prev) => [...prev, newWardboy]);
-        }
-        closePopup();
-    };
+    const fetchDepartments = async () => {
+  try {
+    const res = await API.get("departments");
+    setDepartment(res.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    if (editId) {
+      const res = await API.put(`/departments/${editId}`, { name, email, status });
+    } else {
+      const res = await API.post("/departments", { name, email, status });
+    }
+    fetchDepartments();
+    closePopup();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+const handleDelete = async () => {
+  try {
+    await API.delete(`/departments/${deleted}`);
+    fetchDepartments();
+    setDeleted(null);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+
+    //     () => {
+    //     try {
+    //         return JSON.parse(localStorage.getItem("department")) || [];
+    //     } catch {
+    //         return [];
+    //     }
+    // });
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     const newWardboy = {
+    //         id: Date.now(),
+    //         name,
+    //         email,
+    //         status,//
+    //     };
+    //     if (editId) {
+    //         setDepartment((prev) =>
+    //             prev.map((w) =>
+    //                 w.id === editId ? { ...w, name, email, status } : w
+    //             )
+    //         );
+    //     } else {
+    //         setDepartment((prev) => [...prev, newWardboy]);
+    //     }
+    //     closePopup();
+    // };
 
     const closePopup = () => {
         setShowPopup(false);
@@ -51,15 +93,16 @@ function Department() {
     };
 
     useEffect(() => {
-        try {
-            localStorage.setItem("department", JSON.stringify(department));
-        } catch (e) {
-            console.error("Failed to save deparment to localStorage", e);
-        }
-    }, [department]);
+        fetchDepartments()
+        // try {
+        //     localStorage.setItem("department", JSON.stringify(department));
+        // } catch (e) {
+        //     console.error("Failed to save deparment to localStorage", e);
+        // }
+    }, []);
 
     const editDr = (w) => {
-        setEditId(w.id);
+        setEditId(w._id);
         setName(w.name);
         setEmail(w.email);
         setShowPopup(true);//
@@ -81,10 +124,10 @@ function Department() {
         setDeleted(id);
     };
 
-    const handleDelete = () => {
-        setDepartment((prev) => prev.filter((n) => n.id !== deleted));
-        setDeleted(null);
-    };
+    // const handleDelete = () => {
+    //     setDepartment((prev) => prev.filter((n) => n.id !== deleted));
+    //     setDeleted(null);
+    // };
 
     const cancelDelete = () => setDeleted(null);
 

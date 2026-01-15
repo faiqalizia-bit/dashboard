@@ -9,8 +9,9 @@ function WardTable({ wardBoys, onEdit, onDelete, showActions="true" }) {
             <tr>
               <th className="border p-2">Name</th>
               <th className="border p-2">Email</th>
+               <th className="border p-2">Status</th>
               {showActions &&(<th className="border p-2">Actions</th>)}
-              <th className="border p-2">Status</th>
+             
             </tr>
           </thead>
   
@@ -23,9 +24,10 @@ function WardTable({ wardBoys, onEdit, onDelete, showActions="true" }) {
                         </tr>
                     ) : (
                        wardBoys.map((item) => (
-                            <tr key={item.id} className="bg-neutral">
+                            <tr key={item._id} className="bg-neutral">
                                 <td className="border p-2">{item.name}</td>
                                 <td className="border p-2">{item.email}</td>
+                                <td className="border p-2">{item.status}</td>
                                 <td className="border p-2 space-x-2">
                                     <button
                                         onClick={() => onEdit(item)}
@@ -41,7 +43,7 @@ function WardTable({ wardBoys, onEdit, onDelete, showActions="true" }) {
                                         <AiTwotoneDelete />
                                     </button>
                                 </td>
-                                <td className="border p-2">{item.status}</td>
+                                
                             </tr>
                         ))
                     )}

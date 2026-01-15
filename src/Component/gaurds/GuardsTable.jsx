@@ -24,7 +24,7 @@ function GuardsTable({ guard, onEdit, onDelete, showActions="true" }) {
                                </tr>
                            ) : (
                               guard.map((item) => (
-                                   <tr key={item.id} className="bg-neutral">
+                                   <tr key={item._id} className="bg-neutral">
                                        <td className="border p-2">{item.name}</td>
                                        <td className="border p-2">{item.email}</td>
                                        <td className="border p-2 space-x-2">

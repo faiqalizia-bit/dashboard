@@ -4,6 +4,8 @@ import DashboardLayout from "../dashboardlatout/DashboardLayout";
 import DeleteFormModal from "./DeleteFormModal";
 import WardFormModal from "./WardFormModal";
 import WardTable from "./WardTable";
+import API from "../../api";
+
 function WardBoys() {
     const [search, setSearch] = useState("");
     const [name, setName] = useState("");
@@ -13,33 +15,76 @@ function WardBoys() {
     const [deleted, setDeleted] = useState(false)
     const [status, setStatus] = useState("");
 
-    const [wardBoys, setWardBoys] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem("wardboys")) || [];
-        } catch {
-            return [];
-        }
-    });
+    const [wardBoys, setWardBoys] = useState([])
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const newWardboy = {
-            id: Date.now(),
-            name,
-            email,
-            status,//
-        };
-        if (editId) {
-            setWardBoys((prev) =>
-                prev.map((w) =>
-                    w.id === editId ? { ...w, name, email, status } : w
-                )
-            );
-        } else {
-            setWardBoys((prev) => [...prev, newWardboy]);
-        }
-        closePopup();
-    };
+
+    const fetchWardBoys = async () => {
+  try {
+    const res = await API.get("wardboys");
+    setWardBoys(res.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    if (editId) {
+      const res = await API.put(`/wardboys/${editId}`, { name, email, status });
+    } else {
+      const res = await API.post("/wardboys", { name, email, status });
+    }
+    fetchWardBoys();
+    closePopup();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+const handleDelete = async () => {
+  try {
+    await API.delete(`/wardboys/${deleted}`);
+    fetchWardBoys();
+    setDeleted(null);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+
+
+
+    //     () => {
+    //     try {
+    //         return JSON.parse(localStorage.getItem("wardboys")) || [];
+    //     } catch {
+    //         return [];
+    //     }
+    // });
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     const newWardboy = {
+    //         id: Date.now(),
+    //         name,
+    //         email,
+    //         status,//
+    //     };
+    //     if (editId) {
+    //         setWardBoys((prev) =>
+    //             prev.map((w) =>
+    //                 w.id === editId ? { ...w, name, email, status } : w
+    //             )
+    //         );
+    //     } else {
+    //         setWardBoys((prev) => [...prev, newWardboy]);
+    //     }
+    //     closePopup();
+    // };
 
     const closePopup = () => {
         setShowPopup(false);
@@ -50,15 +95,16 @@ function WardBoys() {
     };
 
     useEffect(() => {
-        try {
-            localStorage.setItem("wardboys", JSON.stringify(wardBoys));
-        } catch (e) {
-            console.error("Failed to save WardBoys to localStorage", e);
-        }
-    }, [wardBoys]);
+        fetchWardBoys();
+        // try {
+        //     localStorage.setItem("wardboys", JSON.stringify(wardBoys));
+        // } catch (e) {
+        //     console.error("Failed to save WardBoys to localStorage", e);
+        // }
+    }, []);
 
     const editDr = (w) => {
-        setEditId(w.id);
+        setEditId(w._id);
         setName(w.name);
         setEmail(w.email);
         setShowPopup(true);//
@@ -80,12 +126,12 @@ function WardBoys() {
         setDeleted(id);
     };
 
-    const handleDelete = () => {
-        setWardBoys((prev) => prev.filter((n) => n.id !== deleted));
-        setDeleted(null);
-    };
+    // const handleDelete = () => {
+    //     setWardBoys((prev) => prev.filter((n) => n.id !== deleted));
+    //     setDeleted(null);
+    // };
 
-    const cancelDelete = () => setDeleted(null);
+    // const cancelDelete = () => setDeleted(null);
 
     return (
         <DashboardLayout>

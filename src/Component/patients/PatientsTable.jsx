@@ -23,26 +23,26 @@ function PatientsTable({ patients, onEdit, onDelete, show = "true" }) {
                             </td>
                         </tr>
                     ) : (
-                        patients.map((item, index) => (
-                            <tr key={index} className="text-left bg-neutral">
-                                <td className="border p-2">{item.name}</td>
-                                <td className="border p-2">{item.email}</td>
+                        patients.map((p) => (
+                            <tr key={p._id} className="text-left bg-neutral">
+                                <td className="border p-2">{p.name}</td>
+                                <td className="border p-2">{p.email}</td>
                                 {show && (<td className="border p-2 space-x-2">
                                     <button
-                                        onClick={() => onEdit(item)}
+                                        onClick={() => onEdit(p)}
                                         className=" px-3 py-1 rounded text-secondary"
                                     >
                                         <MdOutlineModeEditOutline />
                                     </button>
                                     <button
-                                        onClick={() => onDelete(item.id)}
+                                        onClick={() => onDelete(p._id)}
                                         className=" px-3 py-1 rounded text-secondary"
                                     >
                                         <AiTwotoneDelete />
                                     </button>
                                 </td>
                                 )}
-                                <td className="border p-2">{item.status}</td>
+                                <td className="border p-2">{p.status}</td>
                             </tr>
                         ))
                     )}
