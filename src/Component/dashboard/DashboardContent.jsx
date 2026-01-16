@@ -8,90 +8,82 @@ import { FaUserNurse } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
 import { FaPeopleCarry } from "react-icons/fa";
 import { MdApartment } from "react-icons/md";
+import API from "../../api";
 
 
 
 function DashboardContent() {
-  const [doctors, setDoctors] = useState([]);
-  const [nurses, setNurses] = useState([]);
-  const [patients, setPatients] = useState([]);
-  const [wardBoys, setWardBoys] = useState([]);
-  const [department, setDepartment] = useState([]);
-  const [guard, setGuard] = useState([]);
 
-  const getStatusCounts = (a) => {
-    const activeCount = a.filter(item => item.status === "Active").length;
-    const inactiveCount = a.filter(item => item.status === "Inactive").length;
-    return { activeCount, inactiveCount };
-  };
-
-  const doctorStatus = getStatusCounts(doctors);
-  const nurseStatus = getStatusCounts(nurses);
-  const patientStatus = getStatusCounts(patients);
-  const wardBoysStatus = getStatusCounts(wardBoys)
-  const DepartmentStatus = getStatusCounts(department)
-  const guardStatus = getStatusCounts(guard)
+  const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    // setDoctors(JSON.parse(localStorage.getItem("doctors")) || []);
-    // setNurses(JSON.parse(localStorage.getItem("nurses")) || []);
-    setPatients(JSON.parse(localStorage.getItem("patients")) || []);
-    setWardBoys(JSON.parse(localStorage.getItem("wardboys")) || []);
-    setDepartment(JSON.parse(localStorage.getItem("department")) || []);
-    setGuard(JSON.parse(localStorage.getItem("guards")) || []);
-  }, []);
+  const fetchStats = async () => {
+    try {
+      const res = await API.get("/dashboard/stats");
+      setStats(res.data);
+    } catch (err) {
+      console.error("Failed to load dashboard stats", err);
+    }
+  };
+
+  fetchStats();
+}, []);
 
 
-  const stats = [
-    {
-      title: "Doctors",
-      icon: <MdMedicalServices />,
-      totalCount: doctors.length,
-      activeCount: doctorStatus.activeCount,
-      inActiveCount: doctorStatus.inactiveCount
-    },
-    {
-      title: "Nurses",
-      icon: <FaUserNurse />,
-      totalCount: nurses.length,
-      activeCount: nurseStatus.activeCount,
-      inActiveCount: nurseStatus.inactiveCount
-    },
-    {
-      title: "Patients",
-      icon: <MdPersonalInjury />,
-      totalCount: patients.length,
-      activeCount: patientStatus.activeCount,
-      inActiveCount: patientStatus.inactiveCount
-    },
-    {
-      title: "Ward Boys",
-      icon: <FaPeopleCarry />,
-      totalCount: wardBoys.length,
-      activeCount: wardBoysStatus.activeCount,
-      inActiveCount: wardBoysStatus.inactiveCount
-    },
-    {
-      title: "Departments",
-      icon: <MdApartment />,
-      totalCount: department.length,
-      activeCount: DepartmentStatus.activeCount,
-      inActiveCount: DepartmentStatus.inactiveCount
-    },
-    {
-      title: "Guards",
-      icon: <MdSecurity />,
-      totalCount: guard.length,
-      activeCount: guardStatus.activeCount,
-      inActiveCount: guardStatus.inactiveCount
-    },
-  ]
+
+  const cards = stats ?[
+
+
+     {
+    title: "Doctors",
+    icon: <MdMedicalServices />,
+    totalCount: stats.doctors.total,
+    activeCount: stats.doctors.active,
+    inActiveCount: stats.doctors.inactive,
+  },
+  {
+    title: "Nurses",
+    icon: <FaUserNurse />,
+    totalCount: stats.nurses.total,
+    activeCount: stats.nurses.active,
+    inActiveCount: stats.nurses.inactive,
+  },
+  {
+    title: "Patients",
+    icon: <MdPersonalInjury />,
+    totalCount: stats.patients.total,
+    activeCount: stats.patients.active,
+    inActiveCount: stats.patients.inactive,
+  },
+  {
+    title: "Ward Boys",
+    icon: <FaPeopleCarry />,
+    totalCount: stats.wardBoys.total,
+    activeCount: stats.wardBoys.active,
+    inActiveCount: stats.wardBoys.inactive,
+  },
+  {
+    title: "Departments",
+    icon: <MdApartment />,
+    totalCount: stats.departments.total,
+    activeCount: stats.departments.active,
+    inActiveCount: stats.departments.inactive,
+  },
+  {
+    title: "Guards",
+    icon: <MdSecurity />,
+    totalCount: stats.guards.total,
+    activeCount: stats.guards.active,
+    inActiveCount: stats.guards.inactive,
+  },
+   
+  ] :[]
 
   return (
     <div className="bg-neutral w-full">
       <h1 className="text-2xl pl-5 font-bold py-2">Dashboard</h1>
       <div className="grid grid-cols-3 gap-5 w-full p-5">
-        {stats?.map((item, idx) => (
+        {cards.map((item, idx) => (
           <Card
             icon={item.icon}
             title={item.title}
@@ -104,7 +96,7 @@ function DashboardContent() {
 
       </div>
 
-      <div className="flex gap-5 w-full p-5">
+      {/* <div className="flex gap-5 w-full p-5">
         {doctors.length > 0 && (
           <Card title="Doctors" value={doctors.length} recentCard="true">
             <DoctorsTable
@@ -123,7 +115,7 @@ function DashboardContent() {
           )
           }
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 }
