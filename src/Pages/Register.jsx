@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import API from "../api";
 
 function Register() {
   const navigate = useNavigate();
@@ -16,50 +17,82 @@ function Register() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    const { name, email, password } = form;
+  const handleRegister = async (e) => {
+  e.preventDefault();
 
-    if (!name || !email || !password) {
-      setType("error");
-      setMessage("All fields are required");
-      return;
-    }
+  const { name, email, password } = form;
 
-    if (password.length < 6) {
-      setType("error");
-      setMessage("Password must be at least 6 characters");
-      return;
-    }
-
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-
-
-    const userExists = users.some((u) => u.email === email);
-    if (userExists) {
-      setType("error");
-      setMessage("Email already registered");
-      return;
-    }
-
-    const newUser = {
-      id: Date.now(),
-      name,
-      email,
-      password, 
-    };
-
-    localStorage.setItem("users", JSON.stringify([...users, newUser]));
-    setType("success");
-    setMessage("Registration successful");
-    navigate("/dashboard")
+  if (!name || !email || !password) {
+    setType("error");
+    setMessage("All fields are required");
+    return;
   }
 
-  //   localStorage.setItem("authUser", JSON.stringify(form));
+  if (password.length < 6) {
+    setType("error");
+    setMessage("Password must be at least 6 characters");
+    return;
+  }
+
+  try {
+    const res = await API.post("/users/register", {
+      name,
+      email,
+      password,
+    });
+
+    setType("success");
+    setMessage(res.data.message);
+
+    localStorage.setItem("loggedUser", JSON.stringify(res.data.user));
+    navigate("/dashboard");
+
+  } catch (error) {
+    setType("error");
+    setMessage(error.response?.data?.message || "Server error");
+  }
+};
+
+
+  // const handleRegister = (e) => {
+  //   e.preventDefault();
+  //   const { name, email, password } = form;
+
+  //   if (!name || !email || !password) {
+  //     setType("error");
+  //     setMessage("All fields are required");
+  //     return;
+  //   }
+
+  //   if (password.length < 6) {
+  //     setType("error");
+  //     setMessage("Password must be at least 6 characters");
+  //     return;
+  //   }
+
+  //       const users = JSON.parse(localStorage.getItem("users")) || [];
+
+
+  //   const userExists = users.some((u) => u.email === email);
+  //   if (userExists) {
+  //     setType("error");
+  //     setMessage("Email already registered");
+  //     return;
+  //   }
+
+  //   const newUser = {
+  //     id: Date.now(),
+  //     name,
+  //     email,
+  //     password, 
+  //   };
+
+  //   localStorage.setItem("users", JSON.stringify([...users, newUser]));
   //   setType("success");
   //   setMessage("Registration successful");
-  //   navigate("/dashboard");
-  // };
+  //   navigate("/dashboard")
+  // }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -123,37 +156,4 @@ function Register() {
 export default Register;
 
 
-// const Register = () => {
-//   return (
-//     <div className="min-h-screen flex items-center justify-center item-center bg-gray-100">
-//       <form className="bg-white p-8 rounded-lg  w-96">
-//         <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
 
-//         <input
-//           type="text"
-//           placeholder="Name"
-//           className="w-full mb-3 p-2 border rounded"
-//         />
-
-//         <input
-//           type="email"
-//           placeholder="Email"
-//           className="w-full mb-3 p-2 border rounded"
-//         />
-
-//         <input
-//           type="password"
-//           placeholder="Password"
-//           className="w-full mb-4 p-2 border rounded"
-//         />
-        
-//         <button className="w-full bg-cyan-500 text-white py-2 rounded hover:bg-cyan-600">
-//           Register
-//         </button>
-
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Register;
