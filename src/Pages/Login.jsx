@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import API from "../api";
+
 
 function Login() {
   const navigate = useNavigate();
@@ -9,37 +11,48 @@ function Login() {
   const [message, setMessage] = useState("");
   const [type, setType] = useState("");
 
-  const handleLogin = (e) => {
+   const handleLogin = async (e) => {
     e.preventDefault();
 
-
-       const users = JSON.parse(localStorage.getItem("users")) || [];
-    const foundUser = users.find(
-      (user) => user.email === email && user.password === password
-    );
-
-    if (foundUser) {
-      localStorage.setItem("loggedUser", JSON.stringify(foundUser));
-      navigate("/dashboard");
-    } else {
+    if (!email || !password) {
       setType("error");
-      setMessage("Invalid email or password");
+      setMessage("Email and password are required");
+      return;
+    }
+
+    try {
+      
+      const res = await API.post("/users/login", { email, password });
+      setType("success");
+      setMessage(res.data.message);
+      localStorage.setItem("loggedUser", JSON.stringify(res.data.user));
+      navigate("/dashboard");
+    } catch (error) {
+      setType("error");
+      setMessage(
+        error.response?.data?.message || "Invalid email or password"
+      );
     }
   };
 
-  //   const storedUser = JSON.parse(localStorage.getItem("authUser"));
+  // const handleLogin = (e) => {
+  //   e.preventDefault();
 
-  //   if (
-  //     email === storedUser.email &&
-  //     password === storedUser.password
-  //   ) {
-  //     localStorage.setItem("isAuth", "true");
+
+  //      const users = JSON.parse(localStorage.getItem("users")) || [];
+  //   const foundUser = users.find(
+  //     (user) => user.email === email && user.password === password
+  //   );
+
+  //   if (foundUser) {
+  //     localStorage.setItem("loggedUser", JSON.stringify(foundUser));
   //     navigate("/dashboard");
   //   } else {
   //     setType("error");
   //     setMessage("Invalid email or password");
   //   }
   // };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

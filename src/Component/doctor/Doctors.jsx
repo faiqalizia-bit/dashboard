@@ -1,7 +1,5 @@
 import DashboardLayout from "../dashboardlatout/DashboardLayout";
 import { useState, useEffect } from "react";
-import { AiTwotoneDelete } from "react-icons/ai";
-import { MdOutlineModeEditOutline } from "react-icons/md"
 import { MdKeyboardArrowRight } from "react-icons/md";
 import DoctorFormModal from "./DoctorFormModal";
 import DeleteDoctorModal from "./DeleteDoctorModal";
