@@ -1,5 +1,5 @@
-import DashboardLayout from "../dashboardlatout/DashboardLayout";
-import DashboardContent from "./DashboardContent";
+import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
+import DashboardContent from "../Component/dashboard/DashboardContent";
 
 function Dashboard() {
   return (

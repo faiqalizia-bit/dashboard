@@ -1,44 +1,45 @@
+import CustomModal from "../formModal/CustomModal"
+
 function WardFormModal({
-  name,
-  email,
-  setName,
-  setEmail,
+  formData,
+  handleChange,
   editId,
   onClose,
   onSubmit,
-  status,//
-  setStatus,//
-  
+
 }) {
   return (
-     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-5 rounded w-[350px]">
-        <div className="flex justify-between mb-4">
-          <h2 className="font-bold">{editId ? "Edit Doctor" : "Add Doctor"}</h2>
-          <button onClick={onClose}
-           className="text-primary font-bold text-lg hover:text-red-500"
-          >x</button>
-        </div>
+    <CustomModal
+      title="Add Wardboy"
+      editTitle="Edit Wardboy"
+      editId={editId}
+      onClose={onClose}
+      onSubmit={onSubmit}
 
-        <form onSubmit={onSubmit} className="flex flex-col gap-3">
+    >
+ <form onSubmit={onSubmit} className="flex flex-col gap-3">
           <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
             placeholder="Name"
             required
             className="border p-2 rounded"
           />
+
           <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder="Email"
             required
             className="border p-2 rounded"
           />
- {/* kucjh */}
+
           <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
             required
             className="border p-2 rounded"
           >
@@ -48,7 +49,11 @@ function WardFormModal({
           </select>
 
           <div className="flex justify-end gap-2">
-            <button type="button" onClick={onClose} className="bg-primary text-white px-3 py-1 rounded">
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-primary text-white px-3 py-1 rounded"
+            >
               Cancel
             </button>
             <button className="bg-primary text-white px-4 py-1 rounded">
@@ -56,8 +61,8 @@ function WardFormModal({
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </CustomModal>
+
   )
 }
 

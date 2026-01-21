@@ -1,17 +1,9 @@
 import { NavLink } from "react-router-dom";
-// import { RxDashboard } from "react-icons/rx";
 import { RiDashboardFill } from "react-icons/ri";
-// import { FaUserDoctor } from "react-icons/fa6";
-import { MdMedicalServices } from "react-icons/md";
-// import { TbNurse } from "react-icons/tb";
 import { FaUserNurse } from "react-icons/fa";
-// import { LuPill } from "react-icons/lu";
 import { MdPersonalInjury } from "react-icons/md";
-// import { SiBitwarden } from "react-icons/si";
 import { FaPeopleCarry } from "react-icons/fa";
-// import { FcDepartment } from "react-icons/fc";
 import { MdApartment } from "react-icons/md";
-// import { GiGuardedTower } from "react-icons/gi";
 import { MdSecurity } from "react-icons/md";
 
 const routes = [

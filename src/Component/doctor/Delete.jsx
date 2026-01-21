@@ -1,8 +1,9 @@
 import CustomModal from "../formModal/CustomModal";
 
-function GuardDeleteModal({ onCancel, onDelete }) {
+function DeleteDoctorModal({ onCancel, onDelete }) {
   return (
-    <CustomModal title="Confirm Delete" onClose={onCancel} >
+    <div>
+      <CustomModal title="Confirm Delete" onClose={onCancel} >
         <p className="mb-4 font-semibold uppercase">Are you sure you want to delete?</p>
         <div className="flex justify-center gap-2">
           <button onClick={onCancel}
@@ -14,7 +15,8 @@ function GuardDeleteModal({ onCancel, onDelete }) {
           </button>
         </div>
       </CustomModal>
-  )
+    </div>
+  );
 }
 
-export default GuardDeleteModal
+export default DeleteDoctorModal;

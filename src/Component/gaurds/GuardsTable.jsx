@@ -1,6 +1,9 @@
 import React from 'react'
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
+import StatusBadge from '../satuscolor/StatusBadge';
+import NoDataRow from '../Common/nodata.jsx';
+
 
 function GuardsTable({ guard, onEdit, onDelete, showActions="true" }) {
   return (
@@ -17,11 +20,7 @@ function GuardsTable({ guard, onEdit, onDelete, showActions="true" }) {
          
                  <tbody>
                      {guard.length === 0 ? (
-                               <tr>
-                                   <td colSpan="4" className="text-center p-4">
-                                       No data found
-                                   </td>
-                               </tr>
+                               <NoDataRow/>
                            ) : (
                               guard.map((item) => (
                                    <tr key={item._id} className="bg-neutral">
@@ -36,13 +35,13 @@ function GuardsTable({ guard, onEdit, onDelete, showActions="true" }) {
                                            </button>
        
                                            <button
-                                               onClick={() => onDelete(item.id)}
+                                               onClick={() => onDelete(item._id)}
                                                className="px-3 py-1 text-black"
                                            >
                                                <AiTwotoneDelete />
                                            </button>
                                        </td>
-                                       <td className="border p-2">{item.status}</td>
+                                       <td className="border p-2"><StatusBadge status={item.status}/></td>
                                    </tr>
                                ))
                            )}

@@ -1,5 +1,7 @@
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEditOutline } from "react-icons/md";
+import StatusBadge from "../satuscolor/StatusBadge";
+import NoDataRow from "../Common/nodata";
 
 function NursesTable({nurses, onEdit, onDelete}) {
     return (
@@ -16,17 +18,13 @@ function NursesTable({nurses, onEdit, onDelete}) {
 
                 <tbody>
                     {nurses.length === 0 ? (
-                        <tr>
-                            <td colSpan="4" className="text-center p-4">
-                                No data found
-                            </td>
-                        </tr>
+                       <NoDataRow/>
                     ) : (
                         nurses.map((nun) => (
                             <tr key={nun._id} className="bg-neutral">
                                 <td className="border p-2">{nun.name}</td>
                                 <td className="border p-2">{nun.email}</td>
-                                  <td className="border p-2">{nun.status}</td>
+                                  <td className="border p-2"><StatusBadge status={nun.status}/></td>
                                 <td className="border p-2 space-x-2">
                                     <button
                                         onClick={() => onEdit(nun)}

@@ -25,7 +25,8 @@ function Login() {
       const res = await API.post("/users/login", { email, password });
       setType("success");
       setMessage(res.data.message);
-      localStorage.setItem("loggedUser", JSON.stringify(res.data.user));
+      localStorage.setItem("users", JSON.stringify(res.data.user));
+       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (error) {
       setType("error");

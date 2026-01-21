@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Card from "./Card";
-import DoctorsTable from "../doctor/DoctorsTable";
 import PatientsTable from "../patients/PatientsTable";
 import { MdSecurity } from "react-icons/md";
 import { MdMedicalServices } from "react-icons/md";
@@ -9,6 +8,7 @@ import { MdPersonalInjury } from "react-icons/md";
 import { FaPeopleCarry } from "react-icons/fa";
 import { MdApartment } from "react-icons/md";
 import API from "../../api";
+import DoctorsTable from "../doctor/List";
 
 
 

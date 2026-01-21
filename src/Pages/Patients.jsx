@@ -1,26 +1,27 @@
-import DashboardLayout from "../dashboardlatout/DashboardLayout"
+import DashboardLayout from "../Component/dashboardlatout/DashboardLayout"
 import { useState, useEffect } from "react"
-import { AiTwotoneDelete } from "react-icons/ai";
-import { MdOutlineModeEditOutline } from "react-icons/md"
 import { MdKeyboardArrowRight } from "react-icons/md";
-import PatientFormModal from "./PatientFormModal";
-import DeletePatientModal from "./DeletePaitientModal";
-import PatientsTable from "./PatientsTable";
-import API from "../../api";
-
+import PatientFormModal from "../Component/patients/PatientFormModal";
+import DeletePatientModal from "../Component/patients/DeletePaitientModal";
+import PatientsTable from "../Component/patients/PatientsTable";
+import API from "../api";
+import { useFormModal } from "../Component/modal/useFormModal";
+import { PatientType } from "../types/patient";
 
 function Patients() {
     const [search, setSearch] = useState("")
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [editId, setEditId] = useState(null);
-    const [showPopup, setShowPopup] = useState(false);
     const [deleted, setDeleted] = useState(false)
-    const [status, setStatus] = useState("");//
-
     const [patients, setPatients] = useState([]);
 
-
+const {
+    isOpen,
+    editId,
+    formData,
+    handleChange,
+    openAdd,
+    openEdit,
+    close,
+  } = useFormModal(PatientType)
 
     const fetchPatients = async () => {
         try {
@@ -36,12 +37,12 @@ function Patients() {
         e.preventDefault();
         try {
             if (editId) {
-                const res = await API.put(`/patients/${editId}`, { name, email, status });
+                const res = await API.put(`/patients/${editId}`, formData);
             } else {
-                const res = await API.post("/patients", { name, email, status });
+                const res = await API.post("/patients", formData);
             }
             fetchPatients();
-            closePopup();
+            close();
         } catch (err) {
             console.error(err);
         }
@@ -59,37 +60,10 @@ function Patients() {
     };
 
 
-
-    const closePopup = () => {
-        setShowPopup(false);
-        setEditId(null);
-        setName("");
-        setEmail("");
-        setStatus("");//
-    };
-
-
-     useEffect(() => {
+    useEffect(() => {
         fetchPatients()
 
     }, []);
-
-
-
-    const editPatients = (patient) => {
-        setEditId(patient._id);
-        setName(patient.name);
-        setEmail(patient.email);
-        setStatus(patient.status)
-        setShowPopup(true);
-    };
-
-
-    const confirmDeletePatient = (id) => {
-        setDeleted(id);
-    };
-
-
 
 
     const filteredpatients = patients.filter(
@@ -112,7 +86,7 @@ function Patients() {
                     />
 
                     <button
-                        onClick={() => setShowPopup(true)}
+                        onClick={openAdd}
                         className="text-neutral bg-primary px-8 rounded"
                     >
                         Add
@@ -122,21 +96,23 @@ function Patients() {
 
                 <PatientsTable
                     patients={filteredpatients}
-                    onEdit={editPatients}
-                    onDelete={confirmDeletePatient}
+                    onEdit={(doc) =>
+                        openEdit(doc._id, {
+                            name: doc.name,
+                            email: doc.email,
+                            status: doc.status,
+                        })
+                    }
+                    onDelete={(id) => setDeleted(id)}
                 />
 
-                {showPopup && (
+                {isOpen && (
                     <PatientFormModal
-                        name={name}
-                        email={email}
-                        setName={setName}
-                        setEmail={setEmail}
+                        formData={formData}
+                        handleChange={handleChange}
                         editId={editId}
-                        onClose={closePopup}
+                        onClose={close}
                         onSubmit={handleSubmit}
-                        status={status}//
-                        setStatus={setStatus}
                     />
                 )}
 

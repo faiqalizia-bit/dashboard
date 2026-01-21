@@ -11,7 +11,7 @@ function DashboardLayout({ children }) {
 
 
 
-  const storedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  const storedUser = JSON.parse(localStorage.getItem("users"));
   useEffect(() => {
     if (!storedUser) {
       navigate("/")
