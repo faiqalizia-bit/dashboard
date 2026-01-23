@@ -18,41 +18,40 @@ function Register() {
   };
 
   const handleRegister = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const { name, email, password } = form;
+    const { name, email, password } = form;
 
-  if (!name || !email || !password) {
-    setType("error");
-    setMessage("All fields are required");
-    return;
-  }
+    if (!name || !email || !password) {
+      setType("error");
+      setMessage("All fields are required");
+      return;
+    }
 
-  if (password.length < 6) {
-    setType("error");
-    setMessage("Password must be at least 6 characters");
-    return;
-  }
+    if (password.length < 6) {
+      setType("error");
+      setMessage("Password must be at least 6 characters");
+      return;
+    }
 
-  try {
-    const res = await API.post("/users/register", {
-      name,
-      email,
-      password,
-    });
+    try {
+      const res = await API.post("/users/register", {
+        name,
+        email,
+        password,
+      });
 
-    setType("success");
-    setMessage(res.data.message);
+      setType("success");
+      setMessage(res.data.message);
 
-    localStorage.setItem("users", JSON.stringify(res.data.user));
-     localStorage.setItem("token", res.data.token);
-    navigate("/dashboard");
-
-  } catch (error) {
-    setType("error");
-    setMessage(error.response?.data?.message || "Server error");
-  }
-};
+      localStorage.setItem("users", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      setType("error");
+      setMessage(error.response?.data?.message || "Server error");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -114,6 +113,3 @@ function Register() {
 }
 
 export default Register;
-
-
-

@@ -12,8 +12,9 @@ function PatientsTable({ patients, onEdit, onDelete, show = "true" }) {
                     <tr>
                         <th className="border p-2">Name</th>
                         <th className="border p-2">Email</th>
-                        {show && (<th className="border p-2">Actions</th>)}
                         <th className="border p-2">Status</th>
+                        {show && (<th className="border p-2">Actions</th>)}
+                        
                     </tr>
                 </thead>
 
@@ -25,6 +26,7 @@ function PatientsTable({ patients, onEdit, onDelete, show = "true" }) {
                             <tr key={p._id} className="text-left bg-neutral">
                                 <td className="border p-2">{p.name}</td>
                                 <td className="border p-2">{p.email}</td>
+                                <td className="border p-2"><StatusBadge status={p.status}/></td>
                                 {show && (<td className="border p-2 space-x-2">
                                     <button
                                         onClick={() => onEdit(p)}
@@ -40,7 +42,7 @@ function PatientsTable({ patients, onEdit, onDelete, show = "true" }) {
                                     </button>
                                 </td>
                                 )}
-                                <td className="border p-2"><StatusBadge status={p.status}/></td>
+                                
                             </tr>
                         ))
                     )}

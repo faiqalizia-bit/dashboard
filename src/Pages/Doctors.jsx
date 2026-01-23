@@ -1,31 +1,34 @@
 import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
 import { useState, useEffect } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import CreateDoctor from "../Component/doctor/Create"
+import CreateDoctor from "../Component/doctor/Create";
 import DeleteDoctorModal from "../Component/doctor/Delete";
 import { useFormModal } from "../Component/modal/useFormModal";
 import DoctorsTable from "../Component/doctor/List";
-import { getDoctors, createDoctor, deleteDoctor, updateDoctor } from "../services/doctor.services"
+import {
+  getDoctors,
+  createDoctor,
+  deleteDoctor,
+  updateDoctor,
+} from "../services/doctor.services";
 import { DoctorType } from "../types/doctors";
+import usePagination from "../Component/modal/usePagination";
+import Pagination from "../Component/formModal/Pagination";
+
 
 function Doctors() {
   const [search, setSearch] = useState("");
-  const [deleted, setDeleted] = useState(false)
+  const [deleted, setDeleted] = useState(false);
   const [doctors, setDoctors] = useState([]);
-  const {
-    isOpen,
-    editId,
-    formData,
-    handleChange,
-    openAdd,
-    openEdit,
-    close,
-  } = useFormModal(DoctorType)
+  const { page, setPage, totalPages, setTotalPages } = usePagination(1,1); 
+  const { isOpen, editId, formData, handleChange, openAdd, openEdit, close } =
+    useFormModal(DoctorType);
 
-  const fetchDoctors = async () => {
+  const fetchDoctors = async (pageNumber = page) => {
     try {
-      const res = await getDoctors()
-      setDoctors(res.data);
+      const res = await getDoctors(pageNumber, 10);
+      setDoctors(res.data.doctors);
+      setTotalPages(res.data.totalPages||1);
     } catch (err) {
       console.error(err);
     }
@@ -39,14 +42,14 @@ function Doctors() {
       await createDoctor(formData);
     }
 
-    fetchDoctors();
+    fetchDoctors(page);
     close();
   };
 
   const handleDelete = async () => {
     try {
       await deleteDoctor(deleted);
-      fetchDoctors();
+      fetchDoctors(page);
       setDeleted(null);
     } catch (err) {
       console.error(err);
@@ -54,20 +57,28 @@ function Doctors() {
   };
 
   useEffect(() => {
-    fetchDoctors();
-
-  }, []);
+    fetchDoctors(page);
+  }, [page]);
 
   const filteredDoctors = doctors.filter(
     (doc) =>
       doc.name.toLowerCase().includes(search.toLowerCase()) ||
-      doc.email.toLowerCase().includes(search.toLowerCase())
+      doc.email.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <DashboardLayout>
       <div className="mb-10 relative py-2">
-        <h1 className="text-lg font-bold mb-4"> <div className="flex gap-[1px] items-center">Dashboard<span className="mt-[2px]"><MdKeyboardArrowRight /> </span>Doctors</div></h1>
+        <h1 className="text-lg font-bold mb-4">
+          {" "}
+          <div className="flex gap-[1px] items-center">
+            Dashboard
+            <span className="mt-[2px]">
+              <MdKeyboardArrowRight />{" "}
+            </span>
+            Doctors
+          </div>
+        </h1>
 
         <div className="flex gap-3 mb-5">
           <input
@@ -95,6 +106,17 @@ function Doctors() {
           }
           onDelete={(id) => setDeleted(id)}
         />
+
+        {/* <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        /> */}
+
+        <Pagination 
+        page={page} totalPages={totalPages} onPageChange={setPage}
+        />
+
         {isOpen && (
           <CreateDoctor
             formData={formData}
@@ -113,14 +135,7 @@ function Doctors() {
         )}
       </div>
     </DashboardLayout>
-  )
+  );
 }
 
-export default Doctors
-
-
-
-
-
-
-
+export default Doctors;

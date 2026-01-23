@@ -12,8 +12,8 @@ formData,
 }) {
   return (
     <CustomModal
-        title="Add Doctor"
-        editTitle="Edit Doctor"
+        title="Add Guard"
+        editTitle="Edit Guard"
         editId={editId}
         onClose={onClose}
         onSubmit={onSubmit}

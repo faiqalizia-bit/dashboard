@@ -1,11 +1,42 @@
 import API from "../api";
-export const getNurses = () => API.get("/nurses");
+
+export const getNurses = async (page = 1, limit = 10) => {
+  try {
+    const res = await API.get(`/nurses?page=${page}&limit=${limit}`);
+    return res;
+  } catch (error) {
+    console.error("Error fetching nurses:", error);
+    throw error;
+  }
+};
 
 
-export const createNurse = (data) => API.post("/nurses", data);
+export const createNurse = async (data) => {
+  try {
+    const res = await API.post("/nurses", data);
+    return res;
+  } catch (error) {
+    console.error("Error creating nurse:", error);
+    throw error;
+  }
+};
 
-export const updateNurse = (id, data) =>
-  API.put(`/nurses/${id}`, data);
+export const updateNurse = async (id, data) => {
+  try {
+    const res = await API.put(`/nurses/${id}`, data);
+    return res;
+  } catch (error) {
+    console.error("Error updating nurse:", error);
+    throw error;
+  }
+};
 
-export const deleteNurse = (id) =>
-  API.delete(`/nurses/${id}`);
+export const deleteNurse = async (id) => {
+  try {
+    const res = await API.delete(`/nurses/${id}`);
+    return res;
+  } catch (error) {
+    console.error("Error deleting nurse:", error);
+    throw error;
+  }
+};
