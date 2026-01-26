@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
-import GuardsTable from "../Component/gaurds/GuardsTable";
 import GuardsFormModal from "../Component/gaurds/GuardsFormModal";
 import GuardDeleteModal from "../Component/gaurds/GuardDeleteModal";
 import {
@@ -14,6 +13,8 @@ import { useFormModal } from "../Component/modal/useFormModal";
 import { GuardType } from "../types/Guard";
 import usePagination from "../Component/modal/usePagination";
 import Pagination from "../Component/formModal/Pagination";
+import { guardColumns } from "../Component/Common/TableColumns";
+import Table from "../Component/Common/Table";
 
 function Guards() {            
   const [search, setSearch] = useState("");
@@ -102,8 +103,9 @@ function Guards() {
           </button>
         </div>
 
-        <GuardsTable
-          guard={filteredGuards}
+        <Table
+          columns={guardColumns}
+          data={filteredGuards}
           onEdit={(doc) =>
             openEdit(doc._id, {
               name: doc.name,

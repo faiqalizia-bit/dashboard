@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import PatientFormModal from "../Component/patients/PatientFormModal";
 import DeletePatientModal from "../Component/patients/DeletePaitientModal";
-import PatientsTable from "../Component/patients/PatientsTable";
 import {
   getPatients,
   createPatient,
@@ -14,6 +13,8 @@ import { useFormModal } from "../Component/modal/useFormModal";
 import { PatientType } from "../types/patient";
 import Pagination from "../Component/formModal/Pagination";
 import usePagination from "../Component/modal/usePagination";
+import Table from "../Component/Common/Table";
+import { patientColoumns } from "../Component/Common/TableColumns";
 
 function Patients() {
   const [search, setSearch] = useState("");
@@ -98,8 +99,9 @@ function Patients() {
           </button>
         </div>
 
-        <PatientsTable
-          patients={filteredpatients}
+        <Table
+          columns={patientColoumns}
+          data={filteredpatients}
           onEdit={(doc) =>
             openEdit(doc._id, {
               name: doc.name,

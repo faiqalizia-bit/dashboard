@@ -14,6 +14,8 @@ import { useFormModal } from "../Component/modal/useFormModal";
 import { DepartmentType } from "../types/department";
 import usePagination from "../Component/modal/usePagination";
 import Pagination from "../Component/formModal/Pagination";
+import Table from "../Component/Common/Table";
+import { departmentColumns } from "../Component/Common/TableColumns";
 
 function Department() {
   const [search, setSearch] = useState("");
@@ -100,8 +102,9 @@ function Department() {
             Add
           </button>
         </div>
-        <DepartmentTable
-          department={filteredDepart}
+        <Table
+         columns={departmentColumns}
+          data={filteredDepart}
           onEdit={(doc) =>
             openEdit(doc._id, {
               name: doc.name,

@@ -14,6 +14,8 @@ import { useFormModal } from "../Component/modal/useFormModal";
 import { WardBoyType } from "../types/wardboy";
 import Pagination from "../Component/formModal/Pagination";
 import usePagination from "../Component/modal/usePagination";
+import Table from "../Component/Common/Table";
+import { wardboyColumns } from "../Component/Common/TableColumns";
 
 function WardBoys() {
   const [search, setSearch] = useState("");
@@ -98,8 +100,9 @@ function WardBoys() {
           </button>
         </div>
 
-        <WardTable
-          wardBoys={filteredwardb}
+        <Table
+         columns={wardboyColumns}
+          data={filteredwardb}
           onEdit={(doc) =>
             openEdit(doc._id, {
               name: doc.name,

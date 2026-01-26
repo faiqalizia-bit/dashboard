@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import NursesTable from "../Component/nurses/NursesTable";
 import DeleteNurseModal from "../Component/nurses/DeleteNurseModal";
 import { useFormModal } from "../Component/modal/useFormModal";
 import CreateNurse from "../Component/nurses/NusrseFormModal";
@@ -14,6 +13,8 @@ import {
 import { NurseType } from "../types/nurses";
 import Pagination from "../Component/formModal/Pagination";
 import usePagination from "../Component/modal/usePagination";
+import Table from "../Component/Common/Table";
+import { nurseColumns } from "../Component/Common/TableColumns";
 
 function Nurses() {
   const [nurses, setNurses] = useState([]);
@@ -80,8 +81,9 @@ function Nurses() {
         </button>
       </div>
 
-      <NursesTable
-        nurses={filteredNurses}
+      <Table
+        columns={nurseColumns}
+        data={filteredNurses}
         onEdit={(nurse) =>
           openEdit(nurse._id, {
             name: nurse.name,

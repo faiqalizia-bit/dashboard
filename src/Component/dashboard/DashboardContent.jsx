@@ -99,7 +99,7 @@ function DashboardContent() {
             icon={item.icon}
             title={item.title}
             value={item.totalCount}
-            idx={idx}
+            key={idx}
             activeCount={item.activeCount}
             inActiveCount={item.inActiveCount}
           />

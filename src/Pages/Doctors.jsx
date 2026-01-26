@@ -4,7 +4,6 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import CreateDoctor from "../Component/doctor/Create";
 import DeleteDoctorModal from "../Component/doctor/Delete";
 import { useFormModal } from "../Component/modal/useFormModal";
-import DoctorsTable from "../Component/doctor/List";
 import {
   getDoctors,
   createDoctor,
@@ -14,6 +13,8 @@ import {
 import { DoctorType } from "../types/doctors";
 import usePagination from "../Component/modal/usePagination";
 import Pagination from "../Component/formModal/Pagination";
+import Table from "../Component/Common/Table";
+import { doctorColumns } from "../Component/Common/TableColumns";
 
 
 function Doctors() {
@@ -95,8 +96,10 @@ function Doctors() {
             Add
           </button>
         </div>
-        <DoctorsTable
-          doctors={filteredDoctors}
+       
+        <Table
+        columns ={doctorColumns}
+        data={filteredDoctors}
           onEdit={(doc) =>
             openEdit(doc._id, {
               name: doc.name,
@@ -106,12 +109,6 @@ function Doctors() {
           }
           onDelete={(id) => setDeleted(id)}
         />
-
-        {/* <Pagination
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        /> */}
 
         <Pagination 
         page={page} totalPages={totalPages} onPageChange={setPage}
