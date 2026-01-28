@@ -1,5 +1,5 @@
 import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import PatientFormModal from "../Component/patients/PatientFormModal";
 import DeletePatientModal from "../Component/patients/DeletePaitientModal";
@@ -20,27 +20,30 @@ function Patients() {
   const [search, setSearch] = useState("");
   const [deleted, setDeleted] = useState(false);
   const [patients, setPatients] = useState([]);
-  const { page, setPage, totalPages, setTotalPages } = usePagination(1,1); 
+  const { page, setPage, totalPages, setTotalPages } = usePagination(1, 1);
   const { isOpen, editId, formData, handleChange, openAdd, openEdit, close } =
     useFormModal(PatientType);
 
-  const fetchPatients = async (pageNumber = page) => {
-    try {
-      const res = await getPatients(pageNumber, 10);
-      setPatients(res.data.patients);
-      setTotalPages(res.data.totalPages)
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const fetchPatients = useCallback(
+    async (pageNumber = page) => {
+      try {
+        const res = await getPatients(pageNumber, 10);
+        setPatients(res.data.patients);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [page, setTotalPages],
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editId) {
-          await updatePatient(editId, formData);
+        await updatePatient(editId, formData);
       } else {
-          await createPatient(formData);
+        await createPatient(formData);
       }
       fetchPatients(page);
       close();
@@ -60,8 +63,16 @@ function Patients() {
   };
 
   useEffect(() => {
-    fetchPatients();
-  }, [page]);
+    (async () => {
+      try {
+        const res = await getPatients(page, 10);
+        setPatients(res.data.patients);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [page, setTotalPages]);
 
   const filteredpatients = patients.filter(
     (nun) =>
@@ -71,7 +82,7 @@ function Patients() {
   return (
     <DashboardLayout>
       <div className="mb-10 relative py-2">
-        <h1 className="text-sm font-bold mb-4">
+        <h1 className="text-lg font-bold mb-4">
           {" "}
           <div className="flex gap-[1px] items-center">
             Dashbord
@@ -112,7 +123,9 @@ function Patients() {
           onDelete={(id) => setDeleted(id)}
         />
         <Pagination
-        page={page} totalPages={totalPages} onPageChange={setPage}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
         />
 
         {isOpen && (

@@ -11,7 +11,7 @@ function Sidebar({ collapsed, setCollapsed, onLogout }) {
     >
       <div className="flex items-center justify-between mb-4">
         {!collapsed && (
-          <h1 className="font-bold text-2xl flex items-center gap-2">
+          <h1 className="text-blue-950 font-bold text-2xl flex items-center gap-2">
             <FaHospital />   Care Health
           </h1>
         )}

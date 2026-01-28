@@ -37,6 +37,15 @@ formData,
             className="border p-2 rounded"
           />
 
+          <input
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            placeholder="Role"
+            required
+            className="border p-2 rounded"
+          />
+
           <select
             name="status"
             value={formData.status}

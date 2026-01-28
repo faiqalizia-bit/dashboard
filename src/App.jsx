@@ -10,6 +10,7 @@ import Nurses from '../src/Pages/Nurses'
 import WardBoys from '../src/Pages/WardBoys'
 import Department from '../src/Pages/Department'
 import Guards from '../src/Pages/Guards'
+import Receptionist from './Pages/Receptionist'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/wardboys" element={<WardBoys />} />
             <Route path="/department" element={<Department />} />
             <Route path="/guards" element={<Guards />} />
+            <Route path="/receptionist" element={<Receptionist />} />
             {/* <Route path="users" element={<Users />} /> */}
           {/* </Route> */}
           <Route path="*" element={<div>404 - Page not found</div>} />

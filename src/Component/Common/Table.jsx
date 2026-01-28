@@ -19,7 +19,7 @@ function Table({ columns = [], data = [], onEdit, onDelete, showActions = true }
 
         <tbody>
           {data.length === 0 ? (
-            <NoDataRow colSpan={columns.length + (showActions ? 1 : 0)} />
+            <NoDataRow  />
           ) : (
             data.map((row) => (
               <tr key={row._id} className="bg-neutral">

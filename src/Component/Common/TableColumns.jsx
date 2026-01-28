@@ -17,7 +17,7 @@ export const doctorColumns = [
 ];
 
 export const nurseColumns = [
-    {
+  {
     key: "name",
     label: "Name",
   },
@@ -32,8 +32,8 @@ export const nurseColumns = [
   },
 ];
 
-export const patientColoumns= [
-   {
+export const patientColoumns = [
+  {
     key: "name",
     label: "Name",
   },
@@ -48,8 +48,8 @@ export const patientColoumns= [
   },
 ];
 
-export const wardboyColumns=[
-   {
+export const wardboyColumns = [
+  {
     key: "name",
     label: "Name",
   },
@@ -62,10 +62,10 @@ export const wardboyColumns=[
     label: "Status",
     render: (value) => <StatusBadge status={value} />,
   },
-]
+];
 
-export const guardColumns =[
-   {
+export const guardColumns = [
+  {
     key: "name",
     label: "Name",
   },
@@ -74,14 +74,18 @@ export const guardColumns =[
     label: "Email",
   },
   {
+    key: "role",
+    label: "Role",
+  },
+  {
     key: "status",
     label: "Status",
     render: (value) => <StatusBadge status={value} />,
   },
-]
+];
 
-export const departmentColumns=[
-   {
+export const departmentColumns = [
+  {
     key: "name",
     label: "Name",
   },
@@ -94,4 +98,20 @@ export const departmentColumns=[
     label: "Status",
     render: (value) => <StatusBadge status={value} />,
   },
-]
+];
+
+export const receptionistColumns = [
+  {
+    key: "name",
+    label: "Name",
+  },
+  {
+    key: "email",
+    label: "Email",
+  },
+  {
+    key: "status",
+    label: "Status",
+    render: (value) => <StatusBadge status={value} />,
+  },
+];

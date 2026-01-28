@@ -16,20 +16,20 @@ import Pagination from "../Component/formModal/Pagination";
 import { guardColumns } from "../Component/Common/TableColumns";
 import Table from "../Component/Common/Table";
 
-function Guards() {            
+function Guards() {
   const [search, setSearch] = useState("");
   const [deleted, setDeleted] = useState(false);
   const [guard, setGuard] = useState([]);
-  const { page, setPage, totalPages, setTotalPages } = usePagination(1,1);
+  const { page, setPage, totalPages, setTotalPages } = usePagination(1, 1);
 
   const { isOpen, editId, formData, handleChange, openAdd, openEdit, close } =
     useFormModal(GuardType);
 
-  const fetchGuards = async (pageNumber =page) => {
+  const fetchGuards = async (pageNumber = page) => {
     try {
       const res = await getGuards(pageNumber, 10);
       setGuard(res.data.guards);
-      setTotalPages(res.data.totalPages)
+      setTotalPages(res.data.totalPages);
     } catch (err) {
       console.error(err);
     }
@@ -40,17 +40,17 @@ function Guards() {
     try {
       if (editId) {
         const res = await updateGuard(editId, formData);
-        console.log("🚀 ~ handleSubmit ~ res:", res)
+        console.log("🚀 ~ handleSubmit ~ res:", res);
       } else {
         const res = await createGuard(formData);
-        console.log("🚀 ~ handleSubmit ~ res:", res)
+        console.log("🚀 ~ handleSubmit ~ res:", res);
       }
       fetchGuards(page);
       close();
     } catch (err) {
       console.error(err);
     }
-  }; 
+  };
 
   const handleDelete = async () => {
     try {
@@ -63,8 +63,16 @@ function Guards() {
   };
 
   useEffect(() => {
-    fetchGuards(page);
-  }, [page]);
+    (async () => {
+      try {
+        const res = await getGuards(page, 10);
+        setGuard(res.data.guards);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [page, setTotalPages]);
 
   const filteredGuards = guard.filter(
     (doc) =>
@@ -110,6 +118,7 @@ function Guards() {
             openEdit(doc._id, {
               name: doc.name,
               email: doc.email,
+              role: doc.role,
               status: doc.status,
             })
           }
@@ -117,7 +126,9 @@ function Guards() {
         />
 
         <Pagination
-        page={page} totalPages={totalPages} onPageChange={setPage}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
         />
 
         {isOpen && (

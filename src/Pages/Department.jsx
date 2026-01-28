@@ -1,6 +1,5 @@
 import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
-import DepartmentTable from "../Component/deaprtments/DepartmentTable";
-import { useState, useEffect } from "react";
+import { useState,  useEffect, useCallback } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import DeleteFormModal from "../Component/deaprtments/DeleteFormModal";
 import DepartmentFormModal from "../Component/deaprtments/departmentFormModal";
@@ -26,7 +25,7 @@ function Department() {
   const { isOpen, editId, formData, handleChange, openAdd, openEdit, close } =
     useFormModal(DepartmentType);
 
-  const fetchDepartments = async (pageNumber = page) => {
+  const fetchDepartments = useCallback( async (pageNumber = page) => {
     try {
       const res = await getDepartments(pageNumber, 10);
       setDepartment(res.data.departments);
@@ -34,8 +33,8 @@ function Department() {
     } catch (err) {
       console.error(err);
     }
-  };
-
+  },[page,setTotalPages]);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -63,8 +62,16 @@ function Department() {
   };
 
   useEffect(() => {
-    fetchDepartments(page);
-  }, [page]);
+     (async () => {
+    try {
+      const res = await getDepartments(page, 10);
+      setDepartment(res.data.departments);
+      setTotalPages(res.data.totalPages);
+    } catch (err) {
+      console.error(err);
+    }
+  })();
+  }, [page, setTotalPages]);
 
   const filteredDepart = department.filter(
     (doc) =>
@@ -98,7 +105,7 @@ function Department() {
             onClick={openAdd}
             className="bg-primary text-neutral  px-8 rounded"
           >
-            {" "}
+            
             Add
           </button>
         </div>

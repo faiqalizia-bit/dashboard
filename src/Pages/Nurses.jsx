@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import DeleteNurseModal from "../Component/nurses/DeleteNurseModal";
@@ -20,19 +20,30 @@ function Nurses() {
   const [nurses, setNurses] = useState([]);
   const [search, setSearch] = useState("");
   const [deleted, setDeleted] = useState(null);
-  const { page, setPage, totalPages, setTotalPages } = usePagination(1,1); 
+  const { page, setPage, totalPages, setTotalPages } = usePagination(1, 1);
   const { isOpen, editId, formData, handleChange, openAdd, openEdit, close } =
     useFormModal(NurseType);
 
-  const fetchNurses = async (pageNumber = page) => {
-    const res = await getNurses(pageNumber, 10);
-    setNurses(res.data.nurses);
-    setTotalPages(res.data.totalPages)
-  };
+  const fetchNurses = useCallback(
+    async (pageNumber = page) => {
+      const res = await getNurses(pageNumber, 10);
+      setNurses(res.data.nurses);
+      setTotalPages(res.data.totalPages);
+    },
+    [page, setTotalPages],
+  );
 
   useEffect(() => {
-    fetchNurses(page);
-  }, [page]);
+    (async () => {
+      try {
+        const res = await getNurses(page, 10);
+        setNurses(res.data.nurses);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [page, setTotalPages]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -94,10 +105,7 @@ function Nurses() {
         onDelete={(id) => setDeleted(id)}
       />
 
-      <Pagination
-      onPageChange={setPage}
-      page={page}
-      totalPages={totalPages}/>
+      <Pagination onPageChange={setPage} page={page} totalPages={totalPages} />
 
       {isOpen && (
         <CreateNurse

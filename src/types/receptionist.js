@@ -1,6 +1,5 @@
-export const GuardType = {
+export const ReceptionistType = {
     name: "",
     email: "",
-    role:"",
     status: "",
 }

@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
 import DeleteFormModal from "../Component/wardboys/DeleteFormModal";
 import WardFormModal from "../Component/wardboys/WardFormModal";
-import WardTable from "../Component/wardboys/WardTable";
 import {
   getWardboys,
   createWardboy,
@@ -21,27 +20,30 @@ function WardBoys() {
   const [search, setSearch] = useState("");
   const [deleted, setDeleted] = useState(false);
   const [wardBoys, setWardBoys] = useState([]);
-  const { page, setPage, totalPages, setTotalPages } = usePagination(1,1); 
+  const { page, setPage, totalPages, setTotalPages } = usePagination(1, 1);
   const { isOpen, editId, formData, handleChange, openAdd, openEdit, close } =
     useFormModal(WardBoyType);
 
-  const fetchWardBoys = async (pageNumber = page) => {
-    try {
-      const res = await getWardboys(pageNumber, 10);
-      setWardBoys(res.data.wardBoys);
-      setTotalPages(res.data.totalPages)
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const fetchWardBoys = useCallback(
+    async (pageNumber = page) => {
+      try {
+        const res = await getWardboys(pageNumber, 10);
+        setWardBoys(res.data.wardBoys);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [page, setTotalPages],
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editId) {
-          await updateWardboy(editId, formData);
+        await updateWardboy(editId, formData);
       } else {
-          await createWardboy(formData);
+        await createWardboy(formData);
       }
       fetchWardBoys(page);
       close();
@@ -61,8 +63,17 @@ function WardBoys() {
   };
 
   useEffect(() => {
-    fetchWardBoys(page);
-  }, [page]);
+    (async () => {
+      try {
+        const res = await getWardboys(page, 10);
+        setWardBoys(res.data.wardBoys);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [page, setTotalPages]);
+
   const filteredwardb = wardBoys.filter(
     (doc) =>
       doc.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -101,7 +112,7 @@ function WardBoys() {
         </div>
 
         <Table
-         columns={wardboyColumns}
+          columns={wardboyColumns}
           data={filteredwardb}
           onEdit={(doc) =>
             openEdit(doc._id, {
@@ -114,7 +125,9 @@ function WardBoys() {
         />
 
         <Pagination
-        page={page} totalPages={totalPages} onPageChange={setPage}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
         />
 
         {isOpen && (

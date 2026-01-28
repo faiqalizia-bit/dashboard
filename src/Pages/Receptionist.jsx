@@ -1,58 +1,61 @@
-import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import CreateDoctor from "../Component/doctor/Create";
-import DeleteDoctorModal from "../Component/doctor/Delete";
-import { useFormModal } from "../Component/modal/useFormModal";
+import DashboardLayout from "../Component/dashboardlatout/DashboardLayout";
 import {
-  getDoctors,
-  createDoctor,
-  deleteDoctor,
-  updateDoctor,
-} from "../services/doctor.services";
-import { DoctorType } from "../types/doctors";
+  createReceptionist,
+  deleteReceptionist,
+  getReceptionists,
+  updateReceptionist,
+} from "../services/receptionist.services";
 import usePagination from "../Component/modal/usePagination";
-import Pagination from "../Component/formModal/Pagination";
+import { receptionistColumns } from "../Component/Common/TableColumns";
+import { useFormModal } from "../Component/modal/useFormModal";
+import { ReceptionistType } from "../types/receptionist";
 import Table from "../Component/Common/Table";
-import { doctorColumns } from "../Component/Common/TableColumns";
+import DeleteReceptionist from "../Component/receptionist/DeleteReceptionist";
+import CreateReceptionist from "../Component/receptionist/create";
+import Pagination from "../Component/formModal/Pagination";
 
-function Doctors() {
+function Receptionist() {
   const [search, setSearch] = useState("");
   const [deleted, setDeleted] = useState(false);
-  const [doctors, setDoctors] = useState([]);
+  const [receptionist, setReceptionist] = useState([]);
   const { page, setPage, totalPages, setTotalPages } = usePagination(1, 1);
-  const { isOpen, editId, formData, handleChange, openAdd, openEdit, close } =
-    useFormModal(DoctorType);
 
-  const fetchDoctors = useCallback(
-    async (pageNumber = page) => {
-      try {
-        const res = await getDoctors(pageNumber, 10);
-        setDoctors(res.data.doctors);
-        setTotalPages(res.data.totalPages || 1);
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    [page, setTotalPages],
-  );
+  const { isOpen, editId, formData, handleChange, openAdd, openEdit, close } =
+    useFormModal(ReceptionistType);
+
+  const fetchReceptionists = async (pageNumber = page) => {
+    try {
+      const res = await getReceptionists(pageNumber, 10);
+      setReceptionist(res.data.receptionists);
+      setTotalPages(res.data.totalPages);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (editId) {
-      await updateDoctor(editId, formData);
-    } else {
-      await createDoctor(formData);
+    try {
+      if (editId) {
+        const res = await updateReceptionist(editId, formData);
+        console.log("🚀 ~ handleSubmit ~ res:", res);
+      } else {
+        const res = await createReceptionist(formData);
+        console.log("🚀 ~ handleSubmit ~ res:", res);
+      }
+      fetchReceptionists(page);
+      close();
+    } catch (err) {
+      console.error(err);
     }
-
-    fetchDoctors(page);
-    close();
   };
 
   const handleDelete = async () => {
     try {
-      await deleteDoctor(deleted);
-      fetchDoctors(page);
+      await deleteReceptionist(deleted);
+      fetchReceptionists(page);
       setDeleted(null);
     } catch (err) {
       console.error(err);
@@ -62,8 +65,8 @@ function Doctors() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await getDoctors(page, 10);
-        setDoctors(res.data.doctors);
+        const res = await getReceptionists(page, 10);
+        setReceptionist(res.data.receptionists);
         setTotalPages(res.data.totalPages);
       } catch (err) {
         console.error(err);
@@ -71,7 +74,7 @@ function Doctors() {
     })();
   }, [page, setTotalPages]);
 
-  const filteredDoctors = doctors.filter(
+  const filteredReceptionist = receptionist.filter(
     (doc) =>
       doc.name.toLowerCase().includes(search.toLowerCase()) ||
       doc.email.toLowerCase().includes(search.toLowerCase()),
@@ -87,7 +90,7 @@ function Doctors() {
             <span className="mt-[2px]">
               <MdKeyboardArrowRight />{" "}
             </span>
-            Doctors
+            Receptionists
           </div>
         </h1>
 
@@ -99,6 +102,7 @@ function Doctors() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+
           <button
             onClick={openAdd}
             className="bg-primary text-neutral  px-8 rounded"
@@ -108,26 +112,23 @@ function Doctors() {
         </div>
 
         <Table
-          columns={doctorColumns}
-          data={filteredDoctors}
+          columns={receptionistColumns}
+          data={filteredReceptionist}
           onEdit={(doc) =>
             openEdit(doc._id, {
               name: doc.name,
               email: doc.email,
+              role: doc.role,
               status: doc.status,
             })
           }
           onDelete={(id) => setDeleted(id)}
         />
-
         <Pagination
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
+        page={page} totalPages={totalPages} onPageChange={setPage}
         />
-
         {isOpen && (
-          <CreateDoctor
+          <CreateReceptionist
             formData={formData}
             handleChange={handleChange}
             editId={editId}
@@ -137,7 +138,7 @@ function Doctors() {
         )}
 
         {deleted && (
-          <DeleteDoctorModal
+          <DeleteReceptionist
             onCancel={() => setDeleted(null)}
             onDelete={handleDelete}
           />
@@ -147,4 +148,4 @@ function Doctors() {
   );
 }
 
-export default Doctors;
+export default Receptionist;

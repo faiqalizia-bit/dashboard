@@ -14,6 +14,7 @@ const routes = [
   { title: "Ward Boys", icon: < FaPeopleCarry />, path: "/wardboys" },
   { title: "Departments", icon: <MdApartment />, path: "/department" },
   { title: "Guards", icon: <MdSecurity   />, path: "/guards" },
+  { title: "Receptionist", icon: <MdSecurity   />, path: "/receptionist" },
 
 ];
 
@@ -26,7 +27,7 @@ function SidebarRoutes({ collapsed }) {
           to={item.path}
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-md transition-all tracking-[1px]
-            ${isActive ? "bg-primary text-white" : "  hover:text-orange-700"}`
+            ${isActive ? "bg-gray-950 text-white" : "  hover:text-orange-700"}`
           }
         >
           <span className="text-lg font-bold">{item.icon}</span>

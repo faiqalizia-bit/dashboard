@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Card from "./Card";
-import PatientsTable from "../patients/PatientsTable";
 import { MdSecurity } from "react-icons/md";
 import { MdMedicalServices } from "react-icons/md";
 import { FaUserNurse } from "react-icons/fa";
@@ -8,13 +7,15 @@ import { MdPersonalInjury } from "react-icons/md";
 import { FaPeopleCarry } from "react-icons/fa";
 import { MdApartment } from "react-icons/md";
 import API from "../../api";
-import DoctorsTable from "../doctor/List";
+import { doctorColumns } from "../Common/TableColumns";
+import Table from "../Common/Table";
+import { patientColoumns } from "../Common/TableColumns";
 
 function DashboardContent() {
   const [stats, setStats] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]);
-  
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -109,13 +110,21 @@ function DashboardContent() {
       <div className="flex gap-5 w-full p-5">
         {doctors.length > 0 && (
           <Card title="Doctors" value={doctors.length} recentCard="true">
-            <DoctorsTable doctors={doctors.slice(0, 5)} showActions={false} />
+            <Table
+              columns={doctorColumns}
+              data={doctors.slice(0, 5)}
+              showActions={false}
+            />
           </Card>
         )}
 
         <Card title="Patients" value={patients.length} recentCard="true">
           {patients.length > 0 && (
-            <PatientsTable patients={patients.slice(0, 5)} show={false} />
+            <Table
+              columns={patientColoumns}
+              data={patients.slice(0, 5)}
+              showActions={false}
+            />
           )}
         </Card>
       </div>
